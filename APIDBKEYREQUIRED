@@ -1,0 +1,4 @@
+in order for this application to work the following must be added to your gradle.properties file:
+
+#API KEY FOR The Movie Database for http:\\www.tmbd.org
+TheMovieDatabaseApiKey = "key_from_API_Service"
