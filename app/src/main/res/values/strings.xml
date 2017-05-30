@@ -1,0 +1,32 @@
+<resources>
+    <string translatable="true" name="app_name">MoviesApp</string>
+    <string translatable="true" name="title1">Movies</string>
+    <string translatable="true" name="title2">Movie Details</string>
+    <string translatable="true" name="spinnerChoiceNone">No choice made</string>
+    <string translatable="true" name="spinnerChoiceSelected">Viewing by:</string>
+    <string translatable="true" name="refresh_button">Refresh</string>
+    <string translatable="true" name="refreshing_data">Refreshing the screen</string>
+    <string translatable="true" name="menuSelection">Menu Item Selected </string>
+    <string translatable="true" name="release_date">Release Date:</string>
+    <string translatable="true" name="movie_rating">Rating:</string>
+    <string translatable="true" name="io_exception_message">You do not have an internet connection, or this application does not have permission to access the internet or the internet has decided not to talk to you, try again later</string>
+    <string translatable="true" name="io_exception_server">Unfortunately, the server does not want to talk to you, ty again later</string>
+    <string translatable="false" name="log_entering_method">Entering Method</string>
+    <string translatable="false" name="log_exiting_method">Exiting Method</string>
+    <string translatable="false" name="var_mShowToastA">mShowToast before conditional</string>
+    <string translatable="false" name="var_mShowToastB">mShowToast in conditional</string>
+    <string translatable="false" name="var_mShowToastC">mShowToast after conditional</string>
+    <string translatable="false" name="log_called_from">Called from </string>
+    <string translatable="false" name="toast_callback">ToastCallBack</string>
+    <string translatable="false" name="space_character">" "</string>
+
+    <string-array name="spinner_choices" translatable ="true">
+        <item>Most Popular</item>
+        <item>Highest Rating</item>
+    </string-array>
+
+    <string-array name="spinner_choices_ind" translatable ="false">
+        <item>Popular</item>
+        <item>Rating</item>
+    </string-array>
+</resources>
