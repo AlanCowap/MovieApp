@@ -15,7 +15,7 @@ import java.util.Locale;
  */
 
 class Movie {
-
+//TODO AWEESOME You created a class to encapsulate the state and behaviour for Movies.
     //Debug tag name of class
     private static String TAG = Movie.class.getSimpleName();
 

@@ -6,6 +6,7 @@
     android:background="@color/colorMainBackground"
     android:orientation="vertical"
     tools:context="com.example.android.app.moviesapp.MoviesMainActivity">
+    <!-- TODO SUGGESTION: Locate the Spinner in the ActionBar to maximise space for other UI components-->
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
