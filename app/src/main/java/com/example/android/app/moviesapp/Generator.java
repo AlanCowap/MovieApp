@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 class Generator {
-
+    //TODO AWESOME this is a nice pattern for using Toasts throughout an App
     //Logging STATIC VARIABLES
     static final String LOG_ENTERING = "ENTERING ";
     static final String LOG_EXITING = "EXITING ";

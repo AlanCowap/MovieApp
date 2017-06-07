@@ -70,6 +70,8 @@ public class MoviesMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null){
             if(savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
+                //TODO EXCELLENT It's good practice to check for null and the key exists
+                //TODO You can also combine these two if statements using the && operator
                 viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
             }
         }
@@ -85,6 +87,7 @@ public class MoviesMainActivity extends AppCompatActivity
         LoaderId = Generator.getNewUniqueLoaderId();
         getSupportLoaderManager().initLoader(LoaderId, null, this);
         if(viewType == 1 ){
+            //TODO SUGGESTION Defining e.g. a String constant rather than an int, can make your code easier to read and less error prone.
             createImageLayout(RATING_LIST);
         }else{
             createImageLayout(POPULAR_LIST);
@@ -160,6 +163,7 @@ public class MoviesMainActivity extends AppCompatActivity
                 try {
                     // HERE 0 parameter indicates it is a brand new query, and therefore not requesting a specific page
                     return NetworkConnection.fetchMainPageData(queryType, pageNum);
+                    //TODO AWESOME You're loading and parsing the data in a background thread
                 } catch (IOException e) {
                     Log.e(TAG, e.getMessage());
                     return null;
@@ -241,6 +245,7 @@ public class MoviesMainActivity extends AppCompatActivity
 
         String result = parent.getItemAtPosition(position).toString();
         Generator.GenerateToastMessage(this, getResources().getString(R.string.spinnerChoiceSelected) + getResources().getString(R.string.space_character) + result);
+        //TODO SUGGESTION Too many toasts spoil the UX
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
 
     }
@@ -275,6 +280,7 @@ public class MoviesMainActivity extends AppCompatActivity
             }else{
                 createImageLayout(RATING_LIST);
             }
+            // TODO AWESOME As required you're displaying the highest ranked or most populat movies
             Generator.GenerateToastMessage(this, getResources().getString(R.string.refreshing_data));
             logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
             return true;
@@ -290,6 +296,7 @@ public class MoviesMainActivity extends AppCompatActivity
             Intent intent = new Intent(this, destinationActivity);
             intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(ClickedMovieId));
             startActivity(intent);
+        //TODO EXCELLENT You're starting a new activity with the MovieID.
             Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
@@ -308,9 +315,11 @@ public class MoviesMainActivity extends AppCompatActivity
         if(outState!=null){
             outState.putInt(DATABASE_REQUEST_TYPE,viewType);
             outState.putInt(DATABASE_POSITION,((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition());
+            //TODO ~~REQUIREMENT~~ "Performance and Stability" Your app crashes when there is no network connection and the device orientation changes
         }
         super.onSaveInstanceState(outState);
     }
+    //TODO AWESOME Saving state here improves the UX.
 
     // logging output
     private void logAndAppend(String str){

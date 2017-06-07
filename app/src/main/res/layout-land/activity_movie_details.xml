@@ -32,6 +32,7 @@
             android:padding="2dp"
             android:layout_margin="0dp"
             android:layout_gravity="center_vertical"/>
+        <!-- TODO SUGGESTION Include a contentDescription attribute in ImageViews for Accessibility -->
         <ScrollView
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="0dp"

@@ -25,6 +25,8 @@
         android:layout_height="match_parent"
         android:background="@color/detailsBackground">
         <include layout="@layout/detail_insert" />
+        <!-- TODO SUGGESTION ScrollView children must set their layout_width or layout_height attributes to wrap_content rather than match_parent in the scrolling dimension -->
+        <!-- TODO SUGGESTION: centering text/images/etc isn't always the best option see Material Design for more -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
