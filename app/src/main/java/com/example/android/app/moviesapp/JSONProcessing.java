@@ -40,7 +40,6 @@ class JSONProcessing {
 
     // Accepts a string from the movie database by popularity or movies by rating
     // and processing them returning an Array List of type Movie, with the list of movies
-    // contained in the data string, also takes a page number, which for now is not implemented
     static ArrayList<Movie> ParseMovieDetails(String data){
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         Log.d(TAG, data);
