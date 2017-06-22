@@ -83,7 +83,7 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
         }
 
         //convenience method for recycling content of the view
-        // not ethe viewHolderIndex does not change for this
+        // note the viewHolderIndex does not change for this
         void bind(int listMovieIndex){
             Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
             listItemIndex.setText(String.valueOf(listMovieIndex));
