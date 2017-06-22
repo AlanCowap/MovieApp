@@ -9,8 +9,8 @@
     <string translatable="true" name="menuSelection">Menu Item Selected </string>
     <string translatable="true" name="release_date">Release Date:</string>
     <string translatable="true" name="movie_rating">Rating:</string>
-    <string translatable="true" name="io_exception_message">You do not have an internet connection, or this application does not have permission to access the internet or the internet has decided not to talk to you, try again later</string>
-    <!-- TODO SUGGESTION Too much text spoils the Toast, not enough time to read all this hurts UX -->
+    <string translatable="true" name="image_descriptor">This holds an image of the movie poster</string>
+    <string translatable="true" name="io_exception_message">You do not have an internet connection, try again later</string>
     <string translatable="true" name="io_exception_server">Unfortunately, the server does not want to talk to you, ty again later</string>
     <string translatable="false" name="log_entering_method">Entering Method</string>
     <string translatable="false" name="log_exiting_method">Exiting Method</string>

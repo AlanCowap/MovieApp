@@ -6,26 +6,15 @@
     android:background="@color/colorMainBackground"
     android:orientation="vertical"
     tools:context="com.example.android.app.moviesapp.MoviesMainActivity">
-    <!-- TODO SUGGESTION: Locate the Spinner in the ActionBar to maximise space for other UI components-->
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:id="@+id/sp_sort_type"
         android:background="@color/colorMainBackground"/>
-    <!-- TODO Alternate with recycler view and grid view-->
-        <!--<GridView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:columnWidth="200dp"-->
-            <!--android:numColumns="auto_fit"-->
-            <!--android:stretchMode="columnWidth"-->
-            <!--android:id="@+id/gv_movies">-->
-        <!--</GridView>-->
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rv_movie_images"
         android:clipToPadding="false"/>
-
 </LinearLayout>

@@ -34,7 +34,7 @@ class NetworkConnection{
 
    static ArrayList<Movie> fetchMainPageData(String urlBasis, int page) throws IOException{
        Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        URL url = GenerateUrl(urlBasis, page);
+        URL url = generateUrl(urlBasis, page);
         if(url == null || url.toString().isEmpty()){
             return null;
         }
@@ -48,7 +48,7 @@ class NetworkConnection{
                 String data = scanner.next();
                 Log.v(TAG, data);
                 ////Process the data on this class
-                return JSONProcessing.ParseMovieDetails(data);
+                return JSONProcessing.parseMovieDetails(data);
             }else{
                 return null;
             }
@@ -62,7 +62,7 @@ class NetworkConnection{
     }
 
 
-    private static URL GenerateUrl(String basis, int page){
+    private static URL generateUrl(String basis, int page){
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         Uri builtUri;
         if(page > 0){

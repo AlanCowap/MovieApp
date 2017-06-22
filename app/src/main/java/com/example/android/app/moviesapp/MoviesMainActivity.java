@@ -41,6 +41,9 @@ public class MoviesMainActivity extends AppCompatActivity
     private static final String DATABASE_POSITION = "clicked_position";
     private static final String DATABASE_PAGE_RETRIEVAL = "page";
 
+    private static final int PORTRAIT_WIDE_COUNT = 2;
+    private static final int LANDSCAPE_WIDE_COUNT = 4;
+
     //Unique int for the AsyncLoader
     private static int LoaderId;
 
@@ -69,8 +72,6 @@ public class MoviesMainActivity extends AppCompatActivity
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null && savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
-                //TODO THANKS EXCELLENT It's good practice to check for null and the key exists
-                //TODO DONE You can also combine these two if statements using the && operator
                 viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
         }
         setContentView(R.layout.activity_movies_main);
@@ -85,7 +86,6 @@ public class MoviesMainActivity extends AppCompatActivity
         LoaderId = Generator.getNewUniqueLoaderId();
         getSupportLoaderManager().initLoader(LoaderId, null, this);
         if(mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Rating))){
-            //TODO THANKS DONE SUGGESTION Defining e.g. a String constant rather than an int, can make your code easier to read and less error prone.
             createImageLayout(RATING_LIST);
         }else{
             createImageLayout(POPULAR_LIST);
@@ -161,7 +161,6 @@ public class MoviesMainActivity extends AppCompatActivity
                 try {
                     // HERE 0 parameter indicates it is a brand new query, and therefore not requesting a specific page
                     return NetworkConnection.fetchMainPageData(queryType, pageNum);
-                    //TODO THANKS AWESOME You're loading and parsing the data in a background thread
                 } catch (IOException e) {
                     Log.e(TAG, e.getMessage());
                     return null;
@@ -181,7 +180,7 @@ public class MoviesMainActivity extends AppCompatActivity
         //Here hide the loading image if implemented
         //assume error if null results
         if(null == data){
-            Generator.GenerateToastMessage(this, getResources().getString(R.string.io_exception_message));
+            Generator.generateToastMessage(this, getResources().getString(R.string.io_exception_message));
         }else{
             mMovies = data;
             RecyclerView.LayoutManager layoutManager;
@@ -189,9 +188,9 @@ public class MoviesMainActivity extends AppCompatActivity
             Point size = new Point();
             display.getSize(size);
             if(size.x>size.y){
-                layoutManager = new GridLayoutManager(getApplicationContext(), 4);
+                layoutManager = new GridLayoutManager(getApplicationContext(), LANDSCAPE_WIDE_COUNT);
             }else{
-                layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+                layoutManager = new GridLayoutManager(getApplicationContext(), PORTRAIT_WIDE_COUNT);
             }
             recyclerView.setLayoutManager(layoutManager);
             ImageAdapter mImageAdapter = new ImageAdapter(this);
@@ -241,7 +240,6 @@ public class MoviesMainActivity extends AppCompatActivity
             createImageLayout(RATING_LIST);
         }
 
-        //TODO DONE - REMOVED SUGGESTION Too many toasts spoil the UX
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
 
     }
@@ -250,7 +248,7 @@ public class MoviesMainActivity extends AppCompatActivity
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        Generator.GenerateToastMessage(this, getResources().getString(R.string.spinnerChoiceNone));
+        Generator.generateToastMessage(this, getResources().getString(R.string.spinnerChoiceNone));
         logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
@@ -269,30 +267,16 @@ public class MoviesMainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         int menuItemSelected = item.getItemId();
-        if(menuItemSelected == R.id.action_refresh){
-            mMovies.clear();
-            if(mSpinnerOptions[MoviesMainActivity.viewType].equals(mSpinnerOptions[0])){
-                createImageLayout(POPULAR_LIST);
-            }else{
-                createImageLayout(RATING_LIST);
-            }
-            // TODO THANKS AWESOME As required you're displaying the highest ranked or most popular movies
-            Generator.GenerateToastMessage(this, getResources().getString(R.string.refreshing_data));
-            logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
-            return true;
-        }
-
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         return super.onOptionsItemSelected(item);
     }
 
     public void onListItemClick(int ClickedMovieId){
-        Generator.ClearToast();
+        Generator.clearToast();
             Class destinationActivity = MovieDetailsActivity.class;
             Intent intent = new Intent(this, destinationActivity);
             intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(ClickedMovieId));
             startActivity(intent);
-        //TODO THANKS EXCELLENT You're starting a new activity with the MovieID.
             Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
@@ -310,12 +294,9 @@ public class MoviesMainActivity extends AppCompatActivity
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         if(outState!=null){
             outState.putInt(DATABASE_REQUEST_TYPE,viewType);
-            //CAUSED BY CODE THAT I WAS EXPERIMENTING WITH  LINE OF CODE REMOVED
-            //TODO DONE ~~REQUIREMENT~~ "Performance and Stability" Your app crashes when there is no network connection and the device orientation changes
         }
         super.onSaveInstanceState(outState);
     }
-    //TODO THANKS AWESOME Saving state here improves the UX.
 
     // logging output
     private void logAndAppend(String str){

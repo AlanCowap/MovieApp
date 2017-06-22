@@ -40,7 +40,7 @@ class JSONProcessing {
 
     // Accepts a string from the movie database by popularity or movies by rating
     // and processing them returning an Array List of type Movie, with the list of movies
-    static ArrayList<Movie> ParseMovieDetails(String data){
+    static ArrayList<Movie> parseMovieDetails(String data){
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         Log.d(TAG, data);
         ArrayList<Movie> movieThumbs = new ArrayList<>();

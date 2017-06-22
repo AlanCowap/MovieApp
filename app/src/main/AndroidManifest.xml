@@ -13,7 +13,6 @@
         <activity android:name=".MoviesMainActivity"
             android:label="@string/title1"
             android:launchMode="singleTop">
-            <!-- TODO AWESOME This will make sure you return to the single main activity -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

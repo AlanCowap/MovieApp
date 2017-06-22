@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 class Generator {
-    //TODO AWESOME this is a nice pattern for using Toasts throughout an App
     //Logging STATIC VARIABLES
     static final String LOG_ENTERING = "ENTERING ";
     static final String LOG_EXITING = "EXITING ";
@@ -27,7 +26,7 @@ class Generator {
 
     private static Toast mToast;
 
-    //  suppress the toast at onCreate
+    //  suppress toast at onCreate
     // initialised as false
     static boolean mShowToast = false;
 
@@ -36,16 +35,16 @@ class Generator {
         mShowToast = false;
     }
 
-    static void ClearToast(){
+    static void clearToast(){
         if(mToast!=null){
             mToast.cancel();
         }
     }
 
     // call method to generate a toast message
-    static void GenerateToastMessage(Context context, String message){
+    static void generateToastMessage(Context context, String message){
         // delete the toast if it exists, so we don't get a backlog
-        Generator.ClearToast();
+        Generator.clearToast();
         // generate the toast
         mToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         mToast.show();
