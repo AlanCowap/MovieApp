@@ -54,7 +54,6 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
     @Override
     public void onBindViewHolder(ImageAdapter.MovieViewHolder holder, int position) {
         Log.d(TAG, Generator.LOG_ENTERING  + Thread.currentThread().getStackTrace()[2].getMethodName());
-        Log.d(TAG, "NUMBER OF VIEWHOLDERS = " + viewHolderCount);
         holder.bind(position);
         Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }

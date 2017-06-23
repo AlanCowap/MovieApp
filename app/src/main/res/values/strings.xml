@@ -1,7 +1,7 @@
 <resources>
-    <string translatable="true" name="app_name">MoviesApp</string>
-    <string translatable="true" name="title1">Movies</string>
-    <string translatable="true" name="title2">Movie Details</string>
+    <string translatable="true" name="app_name">The Movie Database</string>
+    <string translatable="true" name="movie_thumbnails_title">The Movie Database</string>
+    <string translatable="true" name="movie_details_activity_title">TMDB Movie Details</string>
     <string translatable="true" name="spinnerChoiceNone">No choice made</string>
     <string translatable="true" name="spinnerChoiceSelected">Viewing by:</string>
     <string translatable="true" name="refresh_button">Refresh</string>

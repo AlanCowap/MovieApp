@@ -66,31 +66,31 @@ public class MoviesMainActivity extends AppCompatActivity
     // The poster display area recyclerView
     private RecyclerView recyclerView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null && savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
-                viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
+            viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
+            //// set the spinner state
+
         }
         setContentView(R.layout.activity_movies_main);
         Movie.setRootPosterUrl();
-
-        createSpinner();
-
         recyclerView = (RecyclerView)findViewById(R.id.rv_movie_images);
-
-
         //Initialise the AsyncLoader
+        mSpinnerOptions = getResources().getStringArray(R.array.spinner_choices_ind);
         LoaderId = Generator.getNewUniqueLoaderId();
+
+
+
         getSupportLoaderManager().initLoader(LoaderId, null, this);
-        if(mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Rating))){
-            createImageLayout(RATING_LIST);
-        }else{
+        if(mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Popular))){
             createImageLayout(POPULAR_LIST);
         }
-
+        else{
+            createImageLayout(RATING_LIST);
+        }
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
@@ -99,7 +99,7 @@ public class MoviesMainActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         if(savedInstanceState!=null) {
-            if (savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)) {
+            if (savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
                 viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
             }
         }
@@ -200,24 +200,6 @@ public class MoviesMainActivity extends AppCompatActivity
     }
     /// END OF ASYNC LOADER OVERRIDES
 
-
-    //Spinner Creation
-    private void createSpinner(){
-        logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        mSpinnerOptions = getResources().getStringArray(R.array.spinner_choices_ind);
-
-        // get the spinner from the view
-        // initialise the adapter,
-        // and attach the adapter to the spinner
-        Spinner spinner = (Spinner)findViewById(R.id.sp_sort_type);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_choices, R.layout.spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        // set the listener function to the spinner
-        spinner.setOnItemSelectedListener(this);
-        logAndAppend(  Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
-    }
-
     //Spinner Click Listener events
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -229,12 +211,12 @@ public class MoviesMainActivity extends AppCompatActivity
         }
 
         // process the clicked item
-        if(mSpinnerOptions[position].equals(mSpinnerOptions[0])){ // Popular
+        if(mSpinnerOptions[position].equals(getString(R.string.Popular))){ // Popular
             mMovies.clear();
             viewType = 0;
             createImageLayout(POPULAR_LIST);
         }
-        else if(mSpinnerOptions[position].equals(mSpinnerOptions[1])){ // ratings
+        else if(mSpinnerOptions[position].equals(getString(R.string.Rating))){ // ratings
             mMovies.clear();
             viewType = 1;
             createImageLayout(RATING_LIST);
@@ -259,17 +241,16 @@ public class MoviesMainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         getMenuInflater().inflate(R.menu.mainmenu, menu);
+        Spinner spinner = (Spinner)menu.findItem(R.id.nav_spinner).getActionView();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_choices, R.layout.spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(viewType);
+        spinner.setOnItemSelectedListener(this);
         logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        int menuItemSelected = item.getItemId();
-        logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onListItemClick(int ClickedMovieId){
         Generator.clearToast();

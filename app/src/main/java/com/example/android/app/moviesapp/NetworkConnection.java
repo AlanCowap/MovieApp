@@ -46,7 +46,6 @@ class NetworkConnection{
             boolean hasInput = scanner.hasNext();
             if(hasInput){
                 String data = scanner.next();
-                Log.v(TAG, data);
                 ////Process the data on this class
                 return JSONProcessing.parseMovieDetails(data);
             }else{

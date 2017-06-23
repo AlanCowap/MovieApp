@@ -21,7 +21,8 @@ class Generator {
     private static final AtomicInteger sCurrentUniqueId = new AtomicInteger(0);
 
     static int getNewUniqueLoaderId(){
-        return sCurrentUniqueId.getAndIncrement();
+
+        return sCurrentUniqueId.get();
     }
 
     private static Toast mToast;

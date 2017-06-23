@@ -6,12 +6,6 @@
     android:background="@color/colorMainBackground"
     android:orientation="vertical"
     tools:context="com.example.android.app.moviesapp.MoviesMainActivity">
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:id="@+id/sp_sort_type"
-        android:background="@color/colorMainBackground"/>
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
