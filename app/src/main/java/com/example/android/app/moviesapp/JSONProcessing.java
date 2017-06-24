@@ -14,10 +14,6 @@ import java.util.ArrayList;
  */
 
 class JSONProcessing {
-    //Debug tag name of class
-    private static String TAG = JSONProcessing.class.getSimpleName();
-
-
     //JSON movie database keys
     private static final String JSON_PAGE = "page";
     private static final String JSON_TOP_LEVEL_PARAM = "results";
@@ -37,6 +33,8 @@ class JSONProcessing {
     private static final String JSON_VOTE_AVG = "vote_average";
     private static final String JSON_TOTAL_RESULTS = "total_results";
     private static final String JSON_TOTAL_PAGES = "total_pages";
+    //Debug tag name of class
+    private static String TAG = JSONProcessing.class.getSimpleName();
 
     // Accepts a string from the movie database by popularity or movies by rating
     // and processing them returning an Array List of type Movie, with the list of movies

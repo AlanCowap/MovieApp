@@ -2,25 +2,22 @@ package com.example.android.app.moviesapp;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,37 +29,26 @@ public class MoviesMainActivity extends AppCompatActivity
 
     // Debug tag name of class
     private static final String TAG = MoviesMainActivity.class.getSimpleName();
-
     //path for choice appearance
     private static final String POPULAR_LIST = "movie/popular";
     private static final String RATING_LIST = "movie/top_rated";
-
     private static final String DATABASE_REQUEST_TYPE = "request_type";
     private static final String DATABASE_POSITION = "clicked_position";
     private static final String DATABASE_PAGE_RETRIEVAL = "page";
-
     private static final int PORTRAIT_WIDE_COUNT = 2;
     private static final int LANDSCAPE_WIDE_COUNT = 4;
-
-    //Unique int for the AsyncLoader
-    private static int LoaderId;
-
     // Movie data downloaded
     static ArrayList<Movie> mMovies = new ArrayList<>();
     static int TotalResults = 0;
     static int PageCount = 0;
     static int CurrentRetrievedPage = 0;
-
+    //Unique int for the AsyncLoader
+    private static int LoaderId;
     // whether the view is currently by popular or rating
     // negative 1 indicates not currently set
     private static int viewType = 0;
-
-
-
     // Untranslated options of the spinner comparison to identify which was selected
     private static String[] mSpinnerOptions;
-
-
     // The poster display area recyclerView
     private RecyclerView recyclerView;
 
@@ -72,8 +58,6 @@ public class MoviesMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null && savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
             viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
-            //// set the spinner state
-
         }
         setContentView(R.layout.activity_movies_main);
         Movie.setRootPosterUrl();
@@ -81,9 +65,6 @@ public class MoviesMainActivity extends AppCompatActivity
         //Initialise the AsyncLoader
         mSpinnerOptions = getResources().getStringArray(R.array.spinner_choices_ind);
         LoaderId = Generator.getNewUniqueLoaderId();
-
-
-
         getSupportLoaderManager().initLoader(LoaderId, null, this);
         if(mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Popular))){
             createImageLayout(POPULAR_LIST);
@@ -109,7 +90,6 @@ public class MoviesMainActivity extends AppCompatActivity
     //GridLayout fill
     private void createImageLayout(String chosenLayout){
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-
         //THE ASYNC LOADER
         Bundle queryBundle = new Bundle();
         queryBundle.putString(DATABASE_REQUEST_TYPE, chosenLayout);
@@ -118,7 +98,6 @@ public class MoviesMainActivity extends AppCompatActivity
         Loader<String> movieListLoader = loaderManager.getLoader(LoaderId);
         if(movieListLoader == null){
             loaderManager.initLoader(LoaderId, queryBundle, this);
-
         } else{
             loaderManager.restartLoader(LoaderId, queryBundle, this);
         }
@@ -134,7 +113,6 @@ public class MoviesMainActivity extends AppCompatActivity
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(final int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<Movie>>(MoviesMainActivity.this) {
-
             @Override
             protected void onStartLoading() {
                 if(args == null){
@@ -233,10 +211,9 @@ public class MoviesMainActivity extends AppCompatActivity
         Generator.generateToastMessage(this, getResources().getString(R.string.spinnerChoiceNone));
         logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
-
     // END SPINNER
-
-    // Menu system next three overrides
+    // Menu system next overrides
+    // Handles the spinner state with rotation of view
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -250,7 +227,6 @@ public class MoviesMainActivity extends AppCompatActivity
         logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         return true;
     }
-
 
     public void onListItemClick(int ClickedMovieId){
         Generator.clearToast();
@@ -266,9 +242,7 @@ public class MoviesMainActivity extends AppCompatActivity
     public MenuInflater getMenuInflater() {
         return super.getMenuInflater();
     }
-
     // END MENU SYSTEM
-
     // InstanceState Data Conservation override
     @Override
     public void onSaveInstanceState(Bundle outState) {

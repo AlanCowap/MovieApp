@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
 
 /**
@@ -19,16 +20,10 @@ import com.squareup.picasso.Picasso;
 class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
 
     private static final String TAG = ImageAdapter.class.getSimpleName();
-
     private static int viewHolderCount;
-
 
     // The Click Listener is passed from the parent as a parameter at construction
     final private ListItemClickListener mOnClickListener;
-    interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
-    }
-
     ImageAdapter(ListItemClickListener listener){
         super();
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -61,6 +56,10 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
     @Override
     public int getItemCount() {
         return MoviesMainActivity.mMovies.size();
+    }
+
+    interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder

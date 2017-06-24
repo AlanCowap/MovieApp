@@ -16,24 +16,21 @@ class Generator {
     static final String LOG_ENTERING = "ENTERING ";
     static final String LOG_EXITING = "EXITING ";
     static final String SPACE_CHAR = " ";
-
     /// Creates the unique integer required to identify app and loader in manager
     private static final AtomicInteger sCurrentUniqueId = new AtomicInteger(0);
-
-    static int getNewUniqueLoaderId(){
-
-        return sCurrentUniqueId.get();
-    }
-
-    private static Toast mToast;
-
     //  suppress toast at onCreate
     // initialised as false
     static boolean mShowToast = false;
+    private static Toast mToast;
 
     public Generator(){
         super();
         mShowToast = false;
+    }
+
+    static int getNewUniqueLoaderId() {
+
+        return sCurrentUniqueId.get();
     }
 
     static void clearToast(){

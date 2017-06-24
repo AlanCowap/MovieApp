@@ -1,7 +1,8 @@
 package com.example.android.app.moviesapp;
 
-import android.util.Log;
 import android.net.Uri;
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -15,22 +16,17 @@ import java.util.Scanner;
  * Created by Laurence on 21/05/2017.
  *
  */
-
 // default only within package
 class NetworkConnection{
 
-    //Debug tag name of class
-    private static String TAG = NetworkConnection.class.getSimpleName();
-
     private static final String HTTP_REQUEST_DELIMITER = "\\A";
-
     private static final String API_BASE_URL = "https://api.themoviedb.org";
     private static final String API_BASE_VERSION = "3";
     private static final String API_KEY_QUERYSTRING = "api_key";
     private static final String API_PAGE = "page";
-
     private static final String API_KEY = BuildConfig.TMDB_API_KEY;
-
+    //Debug tag name of class
+    private static String TAG = NetworkConnection.class.getSimpleName();
 
    static ArrayList<Movie> fetchMainPageData(String urlBasis, int page) throws IOException{
        Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -60,7 +56,6 @@ class NetworkConnection{
         }
     }
 
-
     private static URL generateUrl(String basis, int page){
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         Uri builtUri;
@@ -80,9 +75,7 @@ class NetworkConnection{
                     .appendQueryParameter(API_KEY_QUERYSTRING, API_KEY)
                     .build();
         }
-
         URL url;
-
         try{
             url = new URL(builtUri.toString());
         }catch (MalformedURLException ex){
