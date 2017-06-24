@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 /**
  * Created by Laurence on 21/05/2017.
  *
