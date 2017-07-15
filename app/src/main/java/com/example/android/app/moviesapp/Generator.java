@@ -5,11 +5,6 @@ import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by Laurence on 21/05/2017.
- *
- */
-
 class Generator {
     //Logging STATIC VARIABLES
     static final String LOG_ENTERING = "ENTERING ";
@@ -46,5 +41,4 @@ class Generator {
         mToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         mToast.show();
     }
-
 }

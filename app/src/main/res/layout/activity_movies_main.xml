@@ -7,8 +7,8 @@
     android:orientation="vertical"
     tools:context="com.example.android.app.moviesapp.MoviesMainActivity">
     <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/rv_movie_images"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clipToPadding="false"/>
 </LinearLayout>

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Laurence on 21/05/2017.
  * Adapted From:  https://www.learn2crack.com/2016/03/grid-recycler view-with-images-and-text.html
  *
  */
@@ -64,7 +63,6 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
 
     class MovieViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-
         ImageView movie_image;
         TextView movie_id;
         TextView viewHolderIndex;
@@ -102,6 +100,5 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
             mOnClickListener.onListItemClick(movieId);
             Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         }
-
     }
 }

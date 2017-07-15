@@ -10,19 +10,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by Laurence on 21/05/2017.
- *
- */
 class Movie {
     private static final String POSTER_PATH_A = "http://image.tmdb.org/t/p";
     private static final String POSTER_SIZE = "w185";
     private static final String URL_PATH_SEPARATOR = "/";
     private static final String URL_NON_PATH_SEPARATOR = "\\";
-    //Debug tag name of class
     private static String TAG = Movie.class.getSimpleName();
     private static String mRootPosterUrl;
-    //holds the JSON object received poster path
+
     private String posterPath;
     private boolean mAdult;
     private String mOverview;
@@ -51,8 +46,10 @@ class Movie {
         if(path.startsWith(URL_NON_PATH_SEPARATOR)){
             path = path.substring(1);
         }
-        path = URL_PATH_SEPARATOR + path;
-        path = mRootPosterUrl + path;
+        if (!path.startsWith(mRootPosterUrl)) {
+            path = URL_PATH_SEPARATOR + path;
+            path = mRootPosterUrl + path;
+        }
         posterPath = path;
     }
 
@@ -60,13 +57,12 @@ class Movie {
         return mAdult;
     }
 
-    void setAdult(String adult) {
-        mAdult = Boolean.parseBoolean(adult);
+    void setAdult(boolean adult){
+        mAdult = adult;
     }
 
-    void setAdult(boolean adult){
-
-        mAdult = adult;
+    void setAdult(String adult) {
+        mAdult = Boolean.parseBoolean(adult);
     }
 
     String getOverview(){
@@ -81,6 +77,10 @@ class Movie {
         return mReleaseDate;
     }
 
+    void setReleaseDate(Date date) {
+        mReleaseDate = date;
+    }
+
     // Takes international standard yyyy-MM-dd format
     //Note if the date cannot be parsed, it will return null
     void setReleaseDate(String date){
@@ -93,12 +93,13 @@ class Movie {
         }
     }
 
-    void setReleaseDate(Date date) {
-        mReleaseDate = date;
-    }
-
     ArrayList<Integer> getGenre(){
         return mGenre_ids;
+    }
+
+    void setGenre(ArrayList<Integer> genres) {
+        mGenre_ids = new ArrayList<>();
+        mGenre_ids.addAll(genres);
     }
 
     void setGenre(String[] genres) {
@@ -112,21 +113,16 @@ class Movie {
         mGenre_ids = new ArrayList<>(Arrays.asList(genres));
     }
 
-    void setGenre(ArrayList<Integer> genres){
-        mGenre_ids = new ArrayList<>();
-            mGenre_ids.addAll(genres);
-    }
-
     int getId() {
         return mId;
     }
 
-    void setId(String id) {
-            this.mId = Integer.parseInt(id);
-    }
-
     void setId(int id) {
         this.mId = id;
+    }
+
+    void setId(String id) {
+        this.mId = Integer.parseInt(id);
     }
 
     String getOriginalTitle() {
@@ -169,49 +165,49 @@ class Movie {
         return mPopularity;
     }
 
-    void setPopularity(String popularity) {
-        this.mPopularity = Double.parseDouble(popularity);
-    }
-
     void setPopularity(Double popularity) {
         this.mPopularity = popularity;
+    }
+
+    void setPopularity(String popularity) {
+        this.mPopularity = Double.parseDouble(popularity);
     }
 
     long getVoteCount() {
         return mVoteCount;
     }
 
-    void setVoteCount(String voteCount) {
-        this.mVoteCount = Long.parseLong(voteCount);
-    }
-
     void setVoteCount(long voteCount) {
         this.mVoteCount = voteCount;
+    }
+
+    void setVoteCount(String voteCount) {
+        this.mVoteCount = Long.parseLong(voteCount);
     }
 
     boolean isVideo() {
         return mVideo;
     }
 
-    void setVideo(String video) {
-        this.mVideo = Boolean.parseBoolean(video);
-    }
-
     void setVideo(boolean video) {
         this.mVideo = video;
+    }
+
+    void setVideo(String video) {
+        this.mVideo = Boolean.parseBoolean(video);
     }
 
     Double getVote_Average() {
         return mVote_Average;
     }
 
+    void setVote_Average(Double vote_Average) {
+        this.mVote_Average = vote_Average;
+    }
+
     void setVote_Average(String vote_Average) {
         Log.d(TAG, "vote_Avg: " + vote_Average);
         this.mVote_Average =Double.parseDouble(vote_Average);
-    }
-
-    void setVote_Average(Double vote_Average) {
-        this.mVote_Average = vote_Average;
     }
 
     void setPageNumber(int pageNo){

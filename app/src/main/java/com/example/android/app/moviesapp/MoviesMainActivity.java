@@ -32,6 +32,8 @@ public class MoviesMainActivity extends AppCompatActivity
     //path for choice appearance
     private static final String POPULAR_LIST = "movie/popular";
     private static final String RATING_LIST = "movie/top_rated";
+    private static final String FAVOURITES_LIST = "favourites";
+
     private static final String DATABASE_REQUEST_TYPE = "request_type";
     private static final String DATABASE_POSITION = "clicked_position";
     private static final String DATABASE_PAGE_RETRIEVAL = "page";
@@ -52,6 +54,7 @@ public class MoviesMainActivity extends AppCompatActivity
     // The poster display area recyclerView
     private RecyclerView recyclerView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -68,11 +71,21 @@ public class MoviesMainActivity extends AppCompatActivity
         getSupportLoaderManager().initLoader(LoaderId, null, this);
         if(mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Popular))){
             createImageLayout(POPULAR_LIST);
-        }
-        else{
+        } else if (mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Rating))) {
             createImageLayout(RATING_LIST);
+        } else {
+            createImageLayout(FAVOURITES_LIST);
         }
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Favourites))) {
+            mMovies.clear();
+            createImageLayout(FAVOURITES_LIST);
+        }
     }
 
     @Override
@@ -135,14 +148,25 @@ public class MoviesMainActivity extends AppCompatActivity
             public ArrayList<Movie> loadInBackground() {
                 String queryType = args.getString(DATABASE_REQUEST_TYPE);
                 int pageNum = args.getInt(DATABASE_PAGE_RETRIEVAL);
-                /* Parse the URL from the passed in String and perform the search */
-                try {
-                    // HERE 0 parameter indicates it is a brand new query, and therefore not requesting a specific page
-                    return NetworkConnection.fetchMainPageData(queryType, pageNum);
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage());
-                    return null;
+                if (queryType != null && queryType.equals(FAVOURITES_LIST)) {
+                    try {
+                        return NetworkConnection.fetchPersistentFavourites(getContext());
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                        return null;
+                    }
+
+                } else {
+                     /* Parse the URL from the passed in String and perform the search */
+                    try {
+                        // HERE 0 parameter indicates it is a brand new query, and therefore not requesting a specific page
+                        return NetworkConnection.fetchMainPageData(queryType, pageNum);
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                        return null;
+                    }
                 }
+
             }
         };
     }
@@ -160,6 +184,9 @@ public class MoviesMainActivity extends AppCompatActivity
         if(null == data){
             Generator.generateToastMessage(this, getResources().getString(R.string.io_exception_message));
         }else{
+            if (data.size() == 0) {
+                Generator.generateToastMessage(this, getResources().getString(R.string.database_empty));
+            }
             mMovies = data;
             RecyclerView.LayoutManager layoutManager;
             Display display = getWindowManager().getDefaultDisplay();
@@ -191,17 +218,19 @@ public class MoviesMainActivity extends AppCompatActivity
         // process the clicked item
         if(mSpinnerOptions[position].equals(getString(R.string.Popular))){ // Popular
             mMovies.clear();
-            viewType = 0;
+            viewType = position;
             createImageLayout(POPULAR_LIST);
         }
         else if(mSpinnerOptions[position].equals(getString(R.string.Rating))){ // ratings
             mMovies.clear();
-            viewType = 1;
+            viewType = position;
             createImageLayout(RATING_LIST);
+        } else if (mSpinnerOptions[position].equals(getString(R.string.Favourites))) { // favourites
+            mMovies.clear();
+            viewType = position;
+            createImageLayout(FAVOURITES_LIST);
         }
-
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
-
     }
 
     ///Spinner override Listener event
@@ -212,6 +241,7 @@ public class MoviesMainActivity extends AppCompatActivity
         logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
     // END SPINNER
+
     // Menu system next overrides
     // Handles the spinner state with rotation of view
     @Override
@@ -230,11 +260,11 @@ public class MoviesMainActivity extends AppCompatActivity
 
     public void onListItemClick(int ClickedMovieId){
         Generator.clearToast();
-            Class destinationActivity = MovieDetailsActivity.class;
-            Intent intent = new Intent(this, destinationActivity);
-            intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(ClickedMovieId));
-            startActivity(intent);
-            Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
+        Class destinationActivity = MovieDetailsActivity.class;
+        Intent intent = new Intent(this, destinationActivity);
+        intent.putExtra(Intent.EXTRA_TEXT, String.valueOf(ClickedMovieId));
+        startActivity(intent);
+        Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
     @Override
