@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class JSONProcessing {
+class JSONProcessing { //TODO AWESOME This is a nifty utility class to encapsulate your JSON processing
     //JSON movie database keys
     private static final String JSON_PAGE = "page";
     private static final String JSON_TOP_LEVEL_PARAM = "results";
@@ -98,6 +98,8 @@ class JSONProcessing {
     }
 
     static String parseTrailers(String data) {
+        //TODO SUGGESTION As with parseMovieDetails method above, parseTrailers should return e.g. an ArrayList<Trailer>
+        //TODO SUGGESTION - this can then leverage the benefit of using a RecyclerView
         JSONArray jsonTrailerArray;
         try {
             JSONObject fullJSONObject = new JSONObject(data);
@@ -123,6 +125,8 @@ class JSONProcessing {
     }
 
     static String parseReviews(String data) {
+        //TODO SUGGESTION As with parseMovieDetails method above, parseTrailers should return e.g. an ArrayList<Review> or ArrayList<String>
+        //TODO SUGGESTION - this can then leverage the benefit of using a RecyclerView (which you actually don't do for Reviews)
         JSONArray jsonReviewArray;
         String reviews = "";
         try {

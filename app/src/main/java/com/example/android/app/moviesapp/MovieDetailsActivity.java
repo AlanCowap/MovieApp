@@ -41,7 +41,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView mReviews;
     //Favourites button
     Button mFaveButton;
-    String TrailerLink = "";
+    //TODO SUGGESTION Improve readability of your code and reduce comments by using meaningful and unambiguous identifier names.
+    String TrailerLink = ""; //TODO SUGGESTION Stick with the Java Naming Conventions
     private int movieID = 0;
     private int index = 0;
     //video recycler
@@ -55,7 +56,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (triggeringIntent != null && triggeringIntent.hasExtra(Intent.EXTRA_TEXT)) {
             movieID = Integer.parseInt(triggeringIntent.getStringExtra(Intent.EXTRA_TEXT));
         }
-        String tmpReviews = "";
+        String tmpReviews = ""; //TODO REQUIREMENT Avoid String literals throughout your code (there are several in this class alone)
+        //TODO SUGGESTION You can initialise local (object reference) variables to null, then do a null check before using them.
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(TRAILER_LINK_TITLE)) {
                 TrailerLink = savedInstanceState.getString(TRAILER_LINK_TITLE);
@@ -74,7 +76,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-        if (TrailerLink == null || TrailerLink == "") {
+        if (TrailerLink == null || TrailerLink == "") { //TODO REQUIREMENT Avoid String literals throughout your code
+            //TODO SUGGESTION Check Strings are set using code like: if(TrailerLink == null || TrailerLink.length() == 0 ) ... //if it's null or empty ...
+            //TODO SUGGESTION Check for a logical error in your code, your possibly mean TrailerLink.equals("")
             new GetVideos().execute();
         }
         Movie movie = MoviesMainActivity.mMovies.get(index);
@@ -94,7 +98,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mOverview.setText(movie.getOverview());
         mReviews = (TextView) findViewById(R.id.reviews);
         mReviewTitle = (TextView) findViewById(R.id.reviews_title);
-        if (tmpReviews == null || tmpReviews == "") {
+        if (tmpReviews == null || tmpReviews == "") {//TODO SUGGESTION Check for a logical error in your code, your possibly mean tmpReviews.equals("")
             new GetReviews().execute();
         } else {
             mReviews.setText(tmpReviews);
@@ -187,6 +191,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private class GetVideos extends AsyncTask<String, Void, String> implements TrailerAdapter.OnTrailerAdapterClickEvent {
+        //TODO SUGGESTION use e.g. AsyncTaskLoader rather than AsyncTask for the reasons described previously e.g. zombie Activities, spawning multiple Tasks etc.
         @Override
         protected String doInBackground(String... params) {
             try {
@@ -200,7 +205,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (s != null && s.length() > 0) {
+            if (s != null && s.length() > 0) { //TODO EXCELLENT That's a much better way to check for a 'valid' String., not a String literal in sight.
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mRecyclerView.setHasFixedSize(true);
                 RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 1);
@@ -225,6 +230,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private class GetReviews extends AsyncTask<String, Void, String> {
+        //TODO SUGGESTION use e.g. AsyncTaskLoader rather than AsyncTask for the reasons described previously e.g. zombie Activities, spawning multiple Tasks etc.
         @Override
         protected String doInBackground(String... params) {
             try {

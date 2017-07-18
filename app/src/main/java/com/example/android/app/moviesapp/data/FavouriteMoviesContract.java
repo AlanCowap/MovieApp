@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class FavouriteMoviesContract {
-
+//TODO AWESOME The contract is well defined and super useful in reducing errors throughout the app
     public static final String AUTHORITY = "com.example.android.app.moviesapp";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static String PATH_FAVOURITE_MOVIES = "favourite_movies";

@@ -18,7 +18,7 @@ class Movie {
     private static String TAG = Movie.class.getSimpleName();
     private static String mRootPosterUrl;
 
-    private String posterPath;
+    private String posterPath; //TODO SUGGESTION Be consistent with identifier names mPosterpath
     private boolean mAdult;
     private String mOverview;
     private Date mReleaseDate;
@@ -85,6 +85,7 @@ class Movie {
     //Note if the date cannot be parsed, it will return null
     void setReleaseDate(String date){
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        //TODO REQUIREMENT String literals should be constants or in strings.xml
         try{
             mReleaseDate = format.parse(date);
         }

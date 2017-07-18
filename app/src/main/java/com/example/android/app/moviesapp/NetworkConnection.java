@@ -30,9 +30,12 @@ class NetworkConnection{
     private static String TAG = NetworkConnection.class.getSimpleName();
 
     static ArrayList<Movie> fetchPersistentFavourites(Context context) {
+        //TODO SUGGESTION This method might be better placed in another class, consider Encapsulation and the Single Responsibility principle.
+        //TODO SUGGESTION  - it accesses a (local) sqlite DB via a Content Provider, not the Network.
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         Cursor cursor = null;
         ArrayList<Movie> lst = new ArrayList<>();
+        //TODO SUGGESTION You can use try-with-resources here.
         try {
             cursor = context.getContentResolver().query(FavouriteMoviesContract.MovieTableEntry.CONTENT_URI, null, null, null, null);
             if (cursor.getCount() < 1) {

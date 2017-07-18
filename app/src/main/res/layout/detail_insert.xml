@@ -4,6 +4,7 @@
     android:layout_height="350dp"
     android:orientation="horizontal"
     android:weightSum="2">
+    <!--TODO REQUIREMENT Internationalization: Move dimensions to dimens.xml, avoid hardcoding them in layouts -->
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="0dp"
@@ -11,6 +12,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:padding="2dp" />
+    <!--TODO REQUIREMENT Accessibility: include a contentDescription attribute with ImageViews -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -44,6 +46,7 @@
                 android:text="@string/movie_rating"
                 android:textColor="@color/colorBlackText"
                 android:textSize="18sp" />
+            <!-- TODO REQUIREMENT Support RTL languages, use start and end attributes instead (or in addition to) left and right attributes -->
             <TextView
                 android:id="@+id/vote_average"
                 android:layout_width="match_parent"
