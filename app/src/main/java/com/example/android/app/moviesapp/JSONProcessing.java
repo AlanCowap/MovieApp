@@ -8,16 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by Laurence on 23/05/2017.
- *
- */
-
 class JSONProcessing {
-    //Debug tag name of class
-    private static String TAG = JSONProcessing.class.getSimpleName();
-
-
     //JSON movie database keys
     private static final String JSON_PAGE = "page";
     private static final String JSON_TOP_LEVEL_PARAM = "results";
@@ -37,11 +28,28 @@ class JSONProcessing {
     private static final String JSON_VOTE_AVG = "vote_average";
     private static final String JSON_TOTAL_RESULTS = "total_results";
     private static final String JSON_TOTAL_PAGES = "total_pages";
+    private static final String JSON_TRAILER_TYPE_NAME = "type";
+    private static final String JSON_TRAILER_TYPE = "Trailer";
+    private static final String JSON_TRAILER_SOURCE_NAME = "site";
+    private static final String JSON_TRAILER_SOURCE = "YouTube";
+    private static final String JSON_TRAILER_KEY = "key";
+    private static final String JSON_REVIEW_CONTENT = "content";
+    private static final String JSON_REVIEW_REMOVE = "_";
+    private static final String SINGLE_SPACE = " ";
+    private static final String DOUBLE_SPACE = "  ";
+    private static final String NEW_LINE = " \r\n";
+    private static final String YOU_TUBE_ROOT = "https://www.youtube.com/watch?v=";
+
+    private static final int RESULT_ELEMENT_COUNT_MOVIES = 14;
+    private static final int RESULT_ELEMENT_COUNT_VIDEOS = 8;
+    private static final int RESULT_ELEMENT_COUNT_REVIEWS = 4;
+
+    //Debug tag name of class
+    private static String TAG = JSONProcessing.class.getSimpleName();
 
     // Accepts a string from the movie database by popularity or movies by rating
     // and processing them returning an Array List of type Movie, with the list of movies
-    // contained in the data string, also takes a page number, which for now is not implemented
-    static ArrayList<Movie> ParseMovieDetails(String data){
+    static ArrayList<Movie> parseMovieDetails(String data){
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         Log.d(TAG, data);
         ArrayList<Movie> movieThumbs = new ArrayList<>();
@@ -57,7 +65,7 @@ class JSONProcessing {
             jsonMoviesArray = fullJSONObject.getJSONArray(JSON_TOP_LEVEL_PARAM);
             for(int i = 0; i<jsonMoviesArray.length(); ++i){
                 JSONObject movieJSONObject = jsonMoviesArray.getJSONObject(i);
-                if(movieJSONObject.length() == 14){
+                if (movieJSONObject.length() == RESULT_ELEMENT_COUNT_MOVIES) {
                     Movie m = new Movie();
                     m.setPosterPath(movieJSONObject.getString(JSON_POSTER_PATH));
                     m.setAdult(movieJSONObject.getBoolean(JSON_ADULT));
@@ -87,5 +95,55 @@ class JSONProcessing {
         }
         Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         return movieThumbs;
+    }
+
+    static String parseTrailers(String data) {
+        JSONArray jsonTrailerArray;
+        try {
+            JSONObject fullJSONObject = new JSONObject(data);
+            jsonTrailerArray = fullJSONObject.getJSONArray(JSON_TOP_LEVEL_PARAM);
+            String trailer = "";
+            for (int i = 0; i < jsonTrailerArray.length(); ++i) {
+                JSONObject trailerJSONObject = jsonTrailerArray.getJSONObject(i);
+                if (trailerJSONObject.length() == RESULT_ELEMENT_COUNT_VIDEOS
+                        && trailerJSONObject.getString(JSON_TRAILER_SOURCE_NAME).equals(JSON_TRAILER_SOURCE)
+                        && trailerJSONObject.getString(JSON_TRAILER_TYPE_NAME).equals(JSON_TRAILER_TYPE)) {
+                    if (trailer.length() > 0) {
+                        trailer = trailer + SINGLE_SPACE + YOU_TUBE_ROOT + trailerJSONObject.getString(JSON_TRAILER_KEY).trim();
+                    } else {
+                        trailer = YOU_TUBE_ROOT + trailerJSONObject.getString(JSON_TRAILER_KEY).trim();
+                    }
+                }
+            }
+            return trailer;
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+            return null;
+        }
+    }
+
+    static String parseReviews(String data) {
+        JSONArray jsonReviewArray;
+        String reviews = "";
+        try {
+            JSONObject fullJSONObject = new JSONObject(data);
+            jsonReviewArray = fullJSONObject.getJSONArray(JSON_TOP_LEVEL_PARAM);
+
+            for (int i = 0; i < jsonReviewArray.length(); ++i) {
+                JSONObject reviewJSONObject = jsonReviewArray.getJSONObject(i);
+                if (reviewJSONObject.length() == RESULT_ELEMENT_COUNT_REVIEWS) {
+                    String r = reviewJSONObject.getString(JSON_REVIEW_CONTENT).replace(JSON_REVIEW_REMOVE, SINGLE_SPACE);
+                    r = r.replaceAll(DOUBLE_SPACE, SINGLE_SPACE);
+                    reviews = reviews + r.trim() + NEW_LINE;
+                }
+            }
+            return reviews;
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+            if (reviews != null) {
+                return reviews;
+            }
+            return null;
+        }
     }
 }

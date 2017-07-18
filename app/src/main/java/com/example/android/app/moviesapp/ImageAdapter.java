@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Laurence on 21/05/2017.
  * Adapted From:  https://www.learn2crack.com/2016/03/grid-recycler view-with-images-and-text.html
  *
  */
@@ -19,16 +19,10 @@ import com.squareup.picasso.Picasso;
 class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
 
     private static final String TAG = ImageAdapter.class.getSimpleName();
-
     private static int viewHolderCount;
-
 
     // The Click Listener is passed from the parent as a parameter at construction
     final private ListItemClickListener mOnClickListener;
-    interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
-    }
-
     ImageAdapter(ListItemClickListener listener){
         super();
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -54,7 +48,6 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
     @Override
     public void onBindViewHolder(ImageAdapter.MovieViewHolder holder, int position) {
         Log.d(TAG, Generator.LOG_ENTERING  + Thread.currentThread().getStackTrace()[2].getMethodName());
-        Log.d(TAG, "NUMBER OF VIEWHOLDERS = " + viewHolderCount);
         holder.bind(position);
         Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
@@ -64,9 +57,12 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
         return MoviesMainActivity.mMovies.size();
     }
 
+    interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
+
     class MovieViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-
         ImageView movie_image;
         TextView movie_id;
         TextView viewHolderIndex;
@@ -83,7 +79,7 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
         }
 
         //convenience method for recycling content of the view
-        // not ethe viewHolderIndex does not change for this
+        // note the viewHolderIndex does not change for this
         void bind(int listMovieIndex){
             Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
             listItemIndex.setText(String.valueOf(listMovieIndex));
@@ -104,6 +100,5 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
             mOnClickListener.onListItemClick(movieId);
             Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         }
-
     }
 }
