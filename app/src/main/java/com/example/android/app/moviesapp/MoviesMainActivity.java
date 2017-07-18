@@ -106,7 +106,7 @@ public class MoviesMainActivity extends AppCompatActivity
         //THE ASYNC LOADER
         Bundle queryBundle = new Bundle();
         queryBundle.putString(DATABASE_REQUEST_TYPE, chosenLayout);
-        queryBundle.putInt(DATABASE_PAGE_RETRIEVAL, 0);
+        queryBundle.putInt(DATABASE_PAGE_RETRIEVAL, 0); //TODO SUGGESTION Use constant values rather than magic numbers throughout your code for easier readability and maintenance.
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> movieListLoader = loaderManager.getLoader(LoaderId);
         if(movieListLoader == null){
