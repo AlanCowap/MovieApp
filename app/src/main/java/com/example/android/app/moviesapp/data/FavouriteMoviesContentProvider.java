@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import static com.example.android.app.moviesapp.data.FavouriteMoviesContract.MovieTableEntry.TABLE_NAME;
 
 public class FavouriteMoviesContentProvider extends ContentProvider {
-//TODO AWESOME You've implemented the Content Provider, giving a nice layer of abstraction and controlled access to your database
     private static final int FAVOURITE_MOVIES = 100;
 
     private static final int FAVOURITE_MOVIES_WITH_MOVIE_ID = 101;

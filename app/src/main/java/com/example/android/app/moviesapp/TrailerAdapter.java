@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
 
     private static final String TAG = TrailerAdapter.class.getSimpleName();
@@ -15,14 +17,18 @@ class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHold
     private static final String SINGLE_SPACE = " ";
     // The Click Listener is passed from the parent as a parameter at construction
     final private OnTrailerAdapterClickEvent mOnClickListener;
-    private String[] mMovieLinks;
+    private ArrayList<String> mMovieLinks;
     private int viewHolderCount = 0;
 
-    TrailerAdapter(String movieLinksString, OnTrailerAdapterClickEvent mOnClickListener) {
+    TrailerAdapter(ArrayList<String> movieLinksList, OnTrailerAdapterClickEvent mOnClickListener) {
         super();
         this.mOnClickListener = mOnClickListener;
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        mMovieLinks = movieLinksString.split(SINGLE_SPACE);
+        if (movieLinksList.size() > 0) {
+            mMovieLinks = movieLinksList;
+        } else {
+            mMovieLinks = new ArrayList<>();
+        }
         Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
@@ -43,7 +49,7 @@ class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHold
     @Override
     public void onBindViewHolder(TrailerAdapter.TrailerViewHolder holder, int position) {
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
-        holder.movie_link.setText(mMovieLinks[position]);
+        holder.movie_link.setText(mMovieLinks.get(position));
         holder.listItemIndex.setText(String.valueOf(position));
         holder.visual.setText(holder.visual.getText() + SINGLE_SPACE + String.valueOf(position + 1));
         Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -51,7 +57,7 @@ class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHold
 
     @Override
     public int getItemCount() {
-        return mMovieLinks.length;
+        return mMovieLinks.size();
     }
 
     interface OnTrailerAdapterClickEvent {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="single">1</integer>
+    <integer name="paired">2</integer>
+    <integer name="triple">3</integer>
+    <integer name="quadruple">4</integer>
+    <integer name="quintuple">5</integer>
+    <integer name="sextuple">6</integer>
+    <integer name="fourteen">14</integer>
+</resources>

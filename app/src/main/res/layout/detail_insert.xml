@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="350dp"
+    android:layout_height="@dimen/detail_top_section_height"
     android:orientation="horizontal"
-    android:weightSum="2">
-    <!--TODO REQUIREMENT Internationalization: Move dimensions to dimens.xml, avoid hardcoding them in layouts -->
+    android:weightSum="@integer/paired">
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/no_padding"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:padding="2dp" />
-    <!--TODO REQUIREMENT Accessibility: include a contentDescription attribute with ImageViews -->
+            android:layout_weight="@integer/single"
+            android:contentDescription="@string/image_descriptor"
+            android:padding="@dimen/tiny_padding" />
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="@dimen/no_padding"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="@integer/single"
             android:orientation="vertical"
-            android:weightSum="14">
+            android:weightSum="@integer/fourteen">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="@integer/sextuple"
                 android:gravity="bottom|center"
-                android:padding="0dp"
+                android:padding="@dimen/no_padding"
                 android:text="@string/release_date"
                 android:textColor="@color/colorBlackText"
-                android:textSize="18sp" />
+                android:textSize="@dimen/standard_text_size_reduced" />
             <TextView
                 android:id="@+id/distrib_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="@integer/single"
                 android:gravity="top|center"
-                android:padding="0dp"
+                android:padding="@dimen/no_padding"
                 android:textColor="@color/colorBlackText"
-                android:textSize="22sp" />
+                android:textSize="@dimen/standard_text_size" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="@integer/single"
                 android:gravity="bottom|center"
-                android:paddingLeft="0dp"
+                android:paddingEnd="@dimen/no_padding"
+                android:paddingLeft="@dimen/no_padding"
+                android:paddingRight="@dimen/no_padding"
+                android:paddingStart="@dimen/no_padding"
                 android:text="@string/movie_rating"
                 android:textColor="@color/colorBlackText"
-                android:textSize="18sp" />
-            <!-- TODO REQUIREMENT Support RTL languages, use start and end attributes instead (or in addition to) left and right attributes -->
+                android:textSize="@dimen/standard_text_size_reduced" />
             <TextView
                 android:id="@+id/vote_average"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="@integer/paired"
                 android:gravity="top|center"
-                android:padding="0dp"
+                android:padding="@dimen/no_padding"
                 android:textColor="@color/colorBlackText"
-                android:textSize="22sp" />
+                android:textSize="@dimen/standard_text_size" />
 
             <Button
                 android:id="@+id/btn_favourite"
@@ -63,14 +64,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="2"
+                android:layout_weight="@integer/paired"
                 android:background="@color/colorClear"
                 android:contentDescription="@string/favourite_add_hint"
                 android:gravity="center|center"
                 android:onClick="favouriteButtonClicked"
-                android:padding="0dp"
+                android:padding="@dimen/no_padding"
                 android:text="@string/like_icon"
                 android:textColor="@color/colorNotFavourite"
-                android:textSize="40sp" />
+                android:textSize="@dimen/icon_text_size" />
         </LinearLayout>
 </LinearLayout>
