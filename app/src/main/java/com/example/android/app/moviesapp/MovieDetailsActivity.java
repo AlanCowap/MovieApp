@@ -89,7 +89,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mOverview.setText(movie.getOverview());
         mReviews = (TextView) findViewById(R.id.reviews);
         mReviewTitle = (TextView) findViewById(R.id.reviews_title);
-        if (tmpReviews == null || tmpReviews.equals("")) {
+        if (tmpReviews == null || tmpReviews.length() == 0) {
             new GetReviews().execute();
         } else {
             mReviews.setText(tmpReviews);
