@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 class DataBaseConnection {
 
-    private static String TAG = NetworkConnection.class.getSimpleName();
+    private static final String TAG = NetworkConnection.class.getSimpleName();
 
     static ArrayList<Movie> fetchPersistentFavourites(Context context) {
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());

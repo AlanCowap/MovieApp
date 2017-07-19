@@ -14,9 +14,9 @@ class Movie {
     private static final String URL_PATH_SEPARATOR = "/";
     private static final String STANDARD_DATE_FORMAT = "yyyy-MM-dd";
     private static final String URL_NON_PATH_SEPARATOR = "\\";
-    private static String TAG = Movie.class.getSimpleName();
-    private static String mRootPosterUrl;
+    private static final String TAG = Movie.class.getSimpleName();
 
+    private static String mRootPosterUrl;
     private String mPosterPath;
     private boolean mAdult;
     private String mOverview;
@@ -56,12 +56,12 @@ class Movie {
         return mAdult;
     }
 
-    void setAdult(String adult) {
-        mAdult = Boolean.parseBoolean(adult);
-    }
-
     void setAdult(boolean adult) {
         mAdult = adult;
+    }
+
+    void setAdult(String adult) {
+        mAdult = Boolean.parseBoolean(adult);
     }
 
     String getOverview(){
@@ -76,6 +76,10 @@ class Movie {
         return mReleaseDate;
     }
 
+    void setReleaseDate(Date date) {
+        mReleaseDate = date;
+    }
+
     // Takes international standard yyyy-MM-dd format
     //Note if the date cannot be parsed, it will return null
     void setReleaseDate(String date){
@@ -88,12 +92,15 @@ class Movie {
         }
     }
 
-    void setReleaseDate(Date date) {
-        mReleaseDate = date;
-    }
-
     ArrayList<Integer> getGenre(){
         return mGenre_ids;
+    }
+
+    void setGenre(String[] genres) {
+        mGenre_ids = new ArrayList<>();
+        for (String s : genres) {
+            mGenre_ids.add(Integer.parseInt(s));
+        }
     }
 
     void setGenre(Integer[] genres) {
@@ -105,23 +112,16 @@ class Movie {
         mGenre_ids.addAll(genres);
     }
 
-    void setGenre(String[] genres) {
-        mGenre_ids = new ArrayList<>();
-        for (String s : genres) {
-            mGenre_ids.add(Integer.parseInt(s));
-        }
-    }
-
     int getId() {
         return mId;
     }
 
-    void setId(String id) {
-        this.mId = Integer.parseInt(id);
-    }
-
     void setId(int id) {
         this.mId = id;
+    }
+
+    void setId(String id) {
+        this.mId = Integer.parseInt(id);
     }
 
     String getOriginalTitle() {
@@ -164,48 +164,48 @@ class Movie {
         return mPopularity;
     }
 
-    void setPopularity(String popularity) {
-        this.mPopularity = Double.parseDouble(popularity);
-    }
-
     void setPopularity(Double popularity) {
         this.mPopularity = popularity;
+    }
+
+    void setPopularity(String popularity) {
+        this.mPopularity = Double.parseDouble(popularity);
     }
 
     long getVoteCount() {
         return mVoteCount;
     }
 
-    void setVoteCount(String voteCount) {
-        this.mVoteCount = Long.parseLong(voteCount);
-    }
-
     void setVoteCount(long voteCount) {
         this.mVoteCount = voteCount;
+    }
+
+    void setVoteCount(String voteCount) {
+        this.mVoteCount = Long.parseLong(voteCount);
     }
 
     boolean isVideo() {
         return mVideo;
     }
 
-    void setVideo(String video) {
-        this.mVideo = Boolean.parseBoolean(video);
-    }
-
     void setVideo(boolean video) {
         this.mVideo = video;
+    }
+
+    void setVideo(String video) {
+        this.mVideo = Boolean.parseBoolean(video);
     }
 
     Double getVote_Average() {
         return mVote_Average;
     }
 
-    void setVote_Average(String vote_Average) {
-        this.mVote_Average =Double.parseDouble(vote_Average);
-    }
-
     void setVote_Average(Double vote_Average) {
         this.mVote_Average = vote_Average;
+    }
+
+    void setVote_Average(String vote_Average) {
+        this.mVote_Average = Double.parseDouble(vote_Average);
     }
 
     void setPageNumber(int pageNo){

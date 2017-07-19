@@ -23,7 +23,7 @@ class NetworkConnection{
     private static final String API_REVIEWS = "reviews";
     private static final String API_KEY = BuildConfig.TMDB_API_KEY;
     //Debug tag name of class
-    private static String TAG = NetworkConnection.class.getSimpleName();
+    private static final String TAG = NetworkConnection.class.getSimpleName();
 
     static ArrayList<Movie> fetchMainPageData(String urlBasis, int page) throws IOException {
        Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());

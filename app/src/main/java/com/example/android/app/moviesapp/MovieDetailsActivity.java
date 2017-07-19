@@ -25,11 +25,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
     // Debug tag name of class
     private static final String TAG = MoviesMainActivity.class.getSimpleName();
 
-    private static String TRAILER_LINK_TITLE = "TrailerLink";
-    private static String TRAILER_REVIEWS = "Reviews";
-    private static String EMPTY_STRING = "";
-    private static String SINGLE_SPACE = " ";
-    private static String NEW_LINE = "\r\n";
+    private static final String TRAILER_LINK_TITLE = "TrailerLink";
+    private static final String TRAILER_REVIEWS = "Reviews";
+    private static final String EMPTY_STRING = "";
+    private static final String SINGLE_SPACE = " ";
+    private static final String NEW_LINE = "\r\n";
 
     TextView mTitle;
     TextView mRating;
