@@ -29,6 +29,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private static String TRAILER_REVIEWS = "Reviews";
     private static String EMPTY_STRING = "";
     private static String SINGLE_SPACE = " ";
+    private static String NEW_LINE = "\r\n";
+
     TextView mTitle;
     TextView mRating;
     TextView mReleaseDate;
@@ -37,7 +39,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView mReviewTitle;
     TextView mReviews;
     Button mFavouriteButton;
-    String mTrailerLink = "";
+    String mTrailerLink = EMPTY_STRING;
     private int movieID = 0;
     private int index = 0;
     private RecyclerView mVideoRecyclerView;
@@ -204,7 +206,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 mVideoRecyclerView.setAdapter(adapter);
             } else {
                 mVideoRecyclerView.setVisibility(View.INVISIBLE);
-                mTrailerLink = "";
+                mTrailerLink = EMPTY_STRING;
             }
         }
 
@@ -237,7 +239,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 String reviews = EMPTY_STRING;
                 for (int i = 0; i < s.size(); ++i) {
                     if (i > 0) {
-                        reviews = reviews + "\r\n";
+                        reviews = reviews + NEW_LINE;
                     }
                     reviews = reviews + s.get(i);
                 }
@@ -245,7 +247,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 mReviews.setVisibility(View.VISIBLE);
                 mReviewTitle.setVisibility(View.VISIBLE);
             } else {
-                mReviews.setText("");
+                mReviews.setText(EMPTY_STRING);
                 mReviews.setVisibility(View.INVISIBLE);
                 mReviewTitle.setVisibility(View.INVISIBLE);
             }

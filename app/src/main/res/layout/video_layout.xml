@@ -32,5 +32,5 @@
         android:padding="@dimen/no_padding"
         android:text="@string/trailer_icon"
         android:textColor="@color/colorNotFavourite"
-        android:textSize="@dimen/offset_text" />
+        android:textSize="@dimen/reduced_standard_text_size" />
 </LinearLayout>

@@ -11,4 +11,4 @@
     android:maxLines="@integer/single"
     android:padding="@dimen/small_padding"
     android:textColor="@color/colorWhiteText"
-    android:textSize="@dimen/offset_text" />
+    android:textSize="@dimen/reduced_standard_text_size" />

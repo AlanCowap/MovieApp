@@ -15,6 +15,7 @@ class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHold
     private static final String TAG = TrailerAdapter.class.getSimpleName();
 
     private static final String SINGLE_SPACE = " ";
+
     // The Click Listener is passed from the parent as a parameter at construction
     final private OnTrailerAdapterClickEvent mOnClickListener;
     private ArrayList<String> mMovieLinks;
