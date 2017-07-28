@@ -55,6 +55,7 @@ public class MoviesMainActivity extends AppCompatActivity
     // The poster display area recyclerView
     private RecyclerView recyclerView;
 
+    //TODO REQUIREMENT "Maintains list items positions on device rotation" - the Grid Layout loses it's position e.g. on device rotation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
