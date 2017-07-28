@@ -1,7 +1,5 @@
 package com.example.android.app.moviesapp;
 
-import android.util.Log;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,11 +12,12 @@ class Movie {
     private static final String POSTER_PATH_A = "http://image.tmdb.org/t/p";
     private static final String POSTER_SIZE = "w185";
     private static final String URL_PATH_SEPARATOR = "/";
+    private static final String STANDARD_DATE_FORMAT = "yyyy-MM-dd";
     private static final String URL_NON_PATH_SEPARATOR = "\\";
-    private static String TAG = Movie.class.getSimpleName();
-    private static String mRootPosterUrl;
+    private static final String TAG = Movie.class.getSimpleName();
 
-    private String posterPath; //TODO SUGGESTION Be consistent with identifier names mPosterpath
+    private static String mRootPosterUrl;
+    private String mPosterPath;
     private boolean mAdult;
     private String mOverview;
     private Date mReleaseDate;
@@ -39,7 +38,7 @@ class Movie {
     }
 
     String getPosterPath(){
-        return posterPath;
+        return mPosterPath;
     }
 
     void setPosterPath(String path){
@@ -50,14 +49,14 @@ class Movie {
             path = URL_PATH_SEPARATOR + path;
             path = mRootPosterUrl + path;
         }
-        posterPath = path;
+        mPosterPath = path;
     }
 
     public boolean getAdult(){
         return mAdult;
     }
 
-    void setAdult(boolean adult){
+    void setAdult(boolean adult) {
         mAdult = adult;
     }
 
@@ -84,8 +83,7 @@ class Movie {
     // Takes international standard yyyy-MM-dd format
     //Note if the date cannot be parsed, it will return null
     void setReleaseDate(String date){
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        //TODO REQUIREMENT String literals should be constants or in strings.xml
+        DateFormat format = new SimpleDateFormat(STANDARD_DATE_FORMAT, Locale.ENGLISH);
         try{
             mReleaseDate = format.parse(date);
         }
@@ -98,11 +96,6 @@ class Movie {
         return mGenre_ids;
     }
 
-    void setGenre(ArrayList<Integer> genres) {
-        mGenre_ids = new ArrayList<>();
-        mGenre_ids.addAll(genres);
-    }
-
     void setGenre(String[] genres) {
         mGenre_ids = new ArrayList<>();
         for (String s : genres) {
@@ -110,8 +103,13 @@ class Movie {
         }
     }
 
-    void setGenre(Integer[] genres){
+    void setGenre(Integer[] genres) {
         mGenre_ids = new ArrayList<>(Arrays.asList(genres));
+    }
+
+    void setGenre(ArrayList<Integer> genres) {
+        mGenre_ids = new ArrayList<>();
+        mGenre_ids.addAll(genres);
     }
 
     int getId() {
@@ -207,8 +205,7 @@ class Movie {
     }
 
     void setVote_Average(String vote_Average) {
-        Log.d(TAG, "vote_Avg: " + vote_Average);
-        this.mVote_Average =Double.parseDouble(vote_Average);
+        this.mVote_Average = Double.parseDouble(vote_Average);
     }
 
     void setPageNumber(int pageNo){

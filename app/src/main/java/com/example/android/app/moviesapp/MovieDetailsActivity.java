@@ -19,34 +19,30 @@ import android.widget.TextView;
 import com.example.android.app.moviesapp.data.FavouriteMoviesContract;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class MovieDetailsActivity extends AppCompatActivity {
     // Debug tag name of class
     private static final String TAG = MoviesMainActivity.class.getSimpleName();
 
-    private static String TRAILER_LINK_TITLE = "TrailerLink";
+    private static final String TRAILER_LINK_TITLE = "TrailerLink";
+    private static final String TRAILER_REVIEWS = "Reviews";
+    private static final String EMPTY_STRING = "";
+    private static final String SINGLE_SPACE = " ";
+    private static final String NEW_LINE = "\r\n";
 
-    private static String TRAILER_REVIEWS = "Reviews";
-    // Movie Title
     TextView mTitle;
-    //Movie Rating
     TextView mRating;
-    //Movie Release Date
     TextView mReleaseDate;
-    // Movie Thumbnail
-    ImageView mImage;
-    //Movie Overview
+    ImageView mMovieThumbnail;
     TextView mOverview;
-    //reviews
     TextView mReviewTitle;
     TextView mReviews;
-    //Favourites button
-    Button mFaveButton;
-    //TODO SUGGESTION Improve readability of your code and reduce comments by using meaningful and unambiguous identifier names.
-    String TrailerLink = ""; //TODO SUGGESTION Stick with the Java Naming Conventions
+    Button mFavouriteButton;
+    String mTrailerLink = EMPTY_STRING;
     private int movieID = 0;
     private int index = 0;
-    //video recycler
-    private RecyclerView mRecyclerView;
+    private RecyclerView mVideoRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +52,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (triggeringIntent != null && triggeringIntent.hasExtra(Intent.EXTRA_TEXT)) {
             movieID = Integer.parseInt(triggeringIntent.getStringExtra(Intent.EXTRA_TEXT));
         }
-        String tmpReviews = ""; //TODO REQUIREMENT Avoid String literals throughout your code (there are several in this class alone)
-        //TODO SUGGESTION You can initialise local (object reference) variables to null, then do a null check before using them.
+        String tmpReviews = null;
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(TRAILER_LINK_TITLE)) {
-                TrailerLink = savedInstanceState.getString(TRAILER_LINK_TITLE);
+                mTrailerLink = savedInstanceState.getString(TRAILER_LINK_TITLE);
             }
             if (savedInstanceState.containsKey(TRAILER_REVIEWS)) {
                 tmpReviews = savedInstanceState.getString(TRAILER_REVIEWS);
@@ -68,7 +63,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_movie_details);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_details_trailers);
+        mVideoRecyclerView = (RecyclerView) findViewById(R.id.rv_details_trailers);
         for(int i = 0; i<MoviesMainActivity.mMovies.size(); ++i){
             if(MoviesMainActivity.mMovies.get(i).getId() == movieID){
                 index = i;
@@ -76,17 +71,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-        if (TrailerLink == null || TrailerLink == "") { //TODO REQUIREMENT Avoid String literals throughout your code
-            //TODO SUGGESTION Check Strings are set using code like: if(TrailerLink == null || TrailerLink.length() == 0 ) ... //if it's null or empty ...
-            //TODO SUGGESTION Check for a logical error in your code, your possibly mean TrailerLink.equals("")
+        if (mTrailerLink == null || mTrailerLink.length() == 0) {
             new GetVideos().execute();
         }
         Movie movie = MoviesMainActivity.mMovies.get(index);
-        mImage = (ImageView)findViewById(R.id.thumbnail);
+        mMovieThumbnail = (ImageView) findViewById(R.id.thumbnail);
         Picasso
                 .with(this)
                 .load(movie.getPosterPath())
-                .into(mImage);
+                .into(mMovieThumbnail);
         mTitle = (TextView)findViewById(R.id.tv_title);
         mTitle.setText(movie.getTitle());
         mRating = (TextView)findViewById(R.id.vote_average);
@@ -98,12 +91,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mOverview.setText(movie.getOverview());
         mReviews = (TextView) findViewById(R.id.reviews);
         mReviewTitle = (TextView) findViewById(R.id.reviews_title);
-        if (tmpReviews == null || tmpReviews == "") {//TODO SUGGESTION Check for a logical error in your code, your possibly mean tmpReviews.equals("")
+        if (tmpReviews == null || tmpReviews.length() == 0) {
             new GetReviews().execute();
         } else {
             mReviews.setText(tmpReviews);
         }
-        mFaveButton = (Button) findViewById(R.id.btn_favourite);
+        mFavouriteButton = (Button) findViewById(R.id.btn_favourite);
         setSelectedItemAsFavourite(movieIsInDatabase());
         logAndAppend( Generator.LOG_EXITING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
@@ -112,7 +105,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         if (outState != null) {
-            outState.putString(TRAILER_LINK_TITLE, TrailerLink);
+            outState.putString(TRAILER_LINK_TITLE, mTrailerLink);
             outState.putString(TRAILER_REVIEWS, mReviews.getText().toString());
         }
         super.onSaveInstanceState(outState);
@@ -179,9 +172,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private void setSelectedItemAsFavourite(Boolean favourite) {
         if (favourite) {
-            mFaveButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorFavourite));
+            mFavouriteButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorFavourite));
         } else {
-            mFaveButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorNotFavourite));
+            mFavouriteButton.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorNotFavourite));
         }
     }
 
@@ -190,10 +183,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Log.v(TAG, str);
     }
 
-    private class GetVideos extends AsyncTask<String, Void, String> implements TrailerAdapter.OnTrailerAdapterClickEvent {
-        //TODO SUGGESTION use e.g. AsyncTaskLoader rather than AsyncTask for the reasons described previously e.g. zombie Activities, spawning multiple Tasks etc.
+    private class GetVideos extends AsyncTask<String, Void, ArrayList<String>> implements TrailerAdapter.OnTrailerAdapterClickEvent {
         @Override
-        protected String doInBackground(String... params) {
+        protected ArrayList<String> doInBackground(String... params) {
             try {
                 return NetworkConnection.fetchMovieTrailers(String.valueOf(movieID));
             } catch (Exception e) {
@@ -203,18 +195,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
-            if (s != null && s.length() > 0) { //TODO EXCELLENT That's a much better way to check for a 'valid' String., not a String literal in sight.
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mRecyclerView.setHasFixedSize(true);
+            if (s != null && s.size() > 0) {
+                mVideoRecyclerView.setVisibility(View.VISIBLE);
+                mVideoRecyclerView.setHasFixedSize(true);
                 RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 1);
-                mRecyclerView.setLayoutManager(layoutManager);
+                mVideoRecyclerView.setLayoutManager(layoutManager);
                 TrailerAdapter adapter = new TrailerAdapter(s, this);
-                mRecyclerView.setAdapter(adapter);
+                mVideoRecyclerView.setAdapter(adapter);
             } else {
-                mRecyclerView.setVisibility(View.INVISIBLE);
-                TrailerLink = "";
+                mVideoRecyclerView.setVisibility(View.INVISIBLE);
+                mTrailerLink = EMPTY_STRING;
             }
         }
 
@@ -229,10 +221,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private class GetReviews extends AsyncTask<String, Void, String> {
-        //TODO SUGGESTION use e.g. AsyncTaskLoader rather than AsyncTask for the reasons described previously e.g. zombie Activities, spawning multiple Tasks etc.
+    private class GetReviews extends AsyncTask<String, Void, ArrayList<String>> {
         @Override
-        protected String doInBackground(String... params) {
+        protected ArrayList<String> doInBackground(String... params) {
             try {
                 return NetworkConnection.fetchMovieReviews(String.valueOf(movieID));
             } catch (Exception e) {
@@ -242,14 +233,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
-            if (s != null && s.length() > 0) {
-                mReviews.setText(s);
+            if (s != null && s.size() > 0) {
+                String reviews = EMPTY_STRING;
+                for (int i = 0; i < s.size(); ++i) {
+                    if (i > 0) {
+                        reviews = reviews + NEW_LINE;
+                    }
+                    reviews = reviews + s.get(i);
+                }
+                mReviews.setText(reviews);
                 mReviews.setVisibility(View.VISIBLE);
                 mReviewTitle.setVisibility(View.VISIBLE);
             } else {
-                mReviews.setText("");
+                mReviews.setText(EMPTY_STRING);
                 mReviews.setVisibility(View.INVISIBLE);
                 mReviewTitle.setVisibility(View.INVISIBLE);
             }

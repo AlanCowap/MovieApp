@@ -33,6 +33,7 @@ public class MoviesMainActivity extends AppCompatActivity
     private static final String POPULAR_LIST = "movie/popular";
     private static final String RATING_LIST = "movie/top_rated";
     private static final String FAVOURITES_LIST = "favourites";
+    private static final int NULL_PAGE = 0;
 
     private static final String DATABASE_REQUEST_TYPE = "request_type";
     private static final String DATABASE_POSITION = "clicked_position";
@@ -106,7 +107,7 @@ public class MoviesMainActivity extends AppCompatActivity
         //THE ASYNC LOADER
         Bundle queryBundle = new Bundle();
         queryBundle.putString(DATABASE_REQUEST_TYPE, chosenLayout);
-        queryBundle.putInt(DATABASE_PAGE_RETRIEVAL, 0); //TODO SUGGESTION Use constant values rather than magic numbers throughout your code for easier readability and maintenance.
+        queryBundle.putInt(DATABASE_PAGE_RETRIEVAL, NULL_PAGE);
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> movieListLoader = loaderManager.getLoader(LoaderId);
         if(movieListLoader == null){
@@ -150,7 +151,7 @@ public class MoviesMainActivity extends AppCompatActivity
                 int pageNum = args.getInt(DATABASE_PAGE_RETRIEVAL);
                 if (queryType != null && queryType.equals(FAVOURITES_LIST)) {
                     try {
-                        return NetworkConnection.fetchPersistentFavourites(getContext());
+                        return DataBaseConnection.fetchPersistentFavourites(getContext());
                     } catch (Exception e) {
                         Log.e(TAG, e.getMessage());
                         return null;

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class JSONProcessing { //TODO AWESOME This is a nifty utility class to encapsulate your JSON processing
+class JSONProcessing {
     //JSON movie database keys
     private static final String JSON_PAGE = "page";
     private static final String JSON_TOP_LEVEL_PARAM = "results";
@@ -97,48 +97,39 @@ class JSONProcessing { //TODO AWESOME This is a nifty utility class to encapsula
         return movieThumbs;
     }
 
-    static String parseTrailers(String data) {
-        //TODO SUGGESTION As with parseMovieDetails method above, parseTrailers should return e.g. an ArrayList<Trailer>
-        //TODO SUGGESTION - this can then leverage the benefit of using a RecyclerView
+    static ArrayList<String> parseTrailers(String data) {
         JSONArray jsonTrailerArray;
         try {
             JSONObject fullJSONObject = new JSONObject(data);
             jsonTrailerArray = fullJSONObject.getJSONArray(JSON_TOP_LEVEL_PARAM);
-            String trailer = "";
+            ArrayList<String> trailers = new ArrayList<>();
             for (int i = 0; i < jsonTrailerArray.length(); ++i) {
                 JSONObject trailerJSONObject = jsonTrailerArray.getJSONObject(i);
                 if (trailerJSONObject.length() == RESULT_ELEMENT_COUNT_VIDEOS
                         && trailerJSONObject.getString(JSON_TRAILER_SOURCE_NAME).equals(JSON_TRAILER_SOURCE)
                         && trailerJSONObject.getString(JSON_TRAILER_TYPE_NAME).equals(JSON_TRAILER_TYPE)) {
-                    if (trailer.length() > 0) {
-                        trailer = trailer + SINGLE_SPACE + YOU_TUBE_ROOT + trailerJSONObject.getString(JSON_TRAILER_KEY).trim();
-                    } else {
-                        trailer = YOU_TUBE_ROOT + trailerJSONObject.getString(JSON_TRAILER_KEY).trim();
-                    }
+                    trailers.add(YOU_TUBE_ROOT + trailerJSONObject.getString(JSON_TRAILER_KEY).trim());
                 }
             }
-            return trailer;
+            return trailers;
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
             return null;
         }
     }
 
-    static String parseReviews(String data) {
-        //TODO SUGGESTION As with parseMovieDetails method above, parseTrailers should return e.g. an ArrayList<Review> or ArrayList<String>
-        //TODO SUGGESTION - this can then leverage the benefit of using a RecyclerView (which you actually don't do for Reviews)
+    static ArrayList<String> parseReviews(String data) {
         JSONArray jsonReviewArray;
-        String reviews = "";
+        ArrayList<String> reviews = new ArrayList<>();
         try {
             JSONObject fullJSONObject = new JSONObject(data);
             jsonReviewArray = fullJSONObject.getJSONArray(JSON_TOP_LEVEL_PARAM);
-
             for (int i = 0; i < jsonReviewArray.length(); ++i) {
                 JSONObject reviewJSONObject = jsonReviewArray.getJSONObject(i);
                 if (reviewJSONObject.length() == RESULT_ELEMENT_COUNT_REVIEWS) {
                     String r = reviewJSONObject.getString(JSON_REVIEW_CONTENT).replace(JSON_REVIEW_REMOVE, SINGLE_SPACE);
                     r = r.replaceAll(DOUBLE_SPACE, SINGLE_SPACE);
-                    reviews = reviews + r.trim() + NEW_LINE;
+                    reviews.add(r.trim());
                 }
             }
             return reviews;
