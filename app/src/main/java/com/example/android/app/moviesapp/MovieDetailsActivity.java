@@ -167,7 +167,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 && cursor.getInt(cursor.getColumnIndex(FavouriteMoviesContract.MovieTableEntry.COLUMN_MOVIE_ID)) == movieID) {
             result = true;
         }
-        //TODO SUGGESTION Close your cursor to avoid memory leaks
+        //TODO DONE SUGGESTION Close your cursor to avoid memory leaks
+        cursor.close();
         return result;
     }
 
