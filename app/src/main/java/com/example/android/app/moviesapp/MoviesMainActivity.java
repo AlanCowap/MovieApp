@@ -34,9 +34,9 @@ public class MoviesMainActivity extends AppCompatActivity
     private static final String RATING_LIST = "movie/top_rated";
     private static final String FAVOURITES_LIST = "favourites";
     private static final int NULL_PAGE = 0;
-
+    private static final String DATABASE_POSITION_INDEX = "index_position";
     private static final String DATABASE_REQUEST_TYPE = "request_type";
-    private static final String DATABASE_POSITION = "clicked_position";
+    private static final String DATABASE_POSITION_TOP = "top_position";
     private static final String DATABASE_PAGE_RETRIEVAL = "page";
     private static final int PORTRAIT_WIDE_COUNT = 2;
     private static final int LANDSCAPE_WIDE_COUNT = 4;
@@ -49,31 +49,41 @@ public class MoviesMainActivity extends AppCompatActivity
     private static int LoaderId;
     // whether the view is currently by popular or rating
     // negative 1 indicates not currently set
-    private static int viewType = 0;
+    private static int mViewType = 0;
     // Untranslated options of the spinner comparison to identify which was selected
     private static String[] mSpinnerOptions;
     // The poster display area recyclerView
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
 
-    //TODO REQUIREMENT "Maintains list items positions on device rotation" - the Grid Layout loses it's position e.g. on device rotation
+    private int mRecyclerViewTopPositionAtSave = 0;
+    private int mRecyclerViewIndexAtSave = 0;
+
+    //TODO DONE REQUIREMENT "Maintains list items positions on device rotation" - the Grid Layout loses it's position e.g. on device rotation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         super.onCreate(savedInstanceState);
-        if(savedInstanceState!=null && savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
-            viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)) {
+                mViewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
+            }
+            if (savedInstanceState.containsKey(DATABASE_POSITION_TOP)) {
+                mRecyclerViewTopPositionAtSave = savedInstanceState.getInt(DATABASE_POSITION_TOP);
+                mRecyclerViewIndexAtSave = savedInstanceState.getInt(DATABASE_POSITION_INDEX);
+            }
         }
         setContentView(R.layout.activity_movies_main);
         Movie.setRootPosterUrl();
-        recyclerView = (RecyclerView)findViewById(R.id.rv_movie_images);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_images);
         //Initialise the AsyncLoader
         mSpinnerOptions = getResources().getStringArray(R.array.spinner_choices_ind);
         LoaderId = Generator.getNewUniqueLoaderId();
         getSupportLoaderManager().initLoader(LoaderId, null, this);
-        if(mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Popular))){
+        if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Popular))) {
             createImageLayout(POPULAR_LIST);
-        } else if (mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Rating))) {
+        } else if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Rating))) {
             createImageLayout(RATING_LIST);
         } else {
             createImageLayout(FAVOURITES_LIST);
@@ -84,7 +94,7 @@ public class MoviesMainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSpinnerOptions[MoviesMainActivity.viewType].equals(getString(R.string.Favourites))) {
+        if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Favourites))) {
             mMovies.clear();
             createImageLayout(FAVOURITES_LIST);
         }
@@ -96,7 +106,7 @@ public class MoviesMainActivity extends AppCompatActivity
         logAndAppend(  Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         if(savedInstanceState!=null) {
             if (savedInstanceState.containsKey(DATABASE_REQUEST_TYPE)){
-                viewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
+                mViewType = savedInstanceState.getInt(DATABASE_REQUEST_TYPE);
             }
         }
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -199,9 +209,12 @@ public class MoviesMainActivity extends AppCompatActivity
             }else{
                 layoutManager = new GridLayoutManager(getApplicationContext(), PORTRAIT_WIDE_COUNT);
             }
-            recyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setLayoutManager(layoutManager);
             ImageAdapter mImageAdapter = new ImageAdapter(this);
-            recyclerView.setAdapter(mImageAdapter);
+            mRecyclerView.setAdapter(mImageAdapter);
+            if (mMovies.size() > 0 && mRecyclerViewIndexAtSave > 0) {
+                ((GridLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(mRecyclerViewIndexAtSave, mRecyclerViewTopPositionAtSave);
+            }
         }
         logAndAppend(  Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
@@ -220,16 +233,16 @@ public class MoviesMainActivity extends AppCompatActivity
         // process the clicked item
         if(mSpinnerOptions[position].equals(getString(R.string.Popular))){ // Popular
             mMovies.clear();
-            viewType = position;
+            mViewType = position;
             createImageLayout(POPULAR_LIST);
         }
         else if(mSpinnerOptions[position].equals(getString(R.string.Rating))){ // ratings
             mMovies.clear();
-            viewType = position;
+            mViewType = position;
             createImageLayout(RATING_LIST);
         } else if (mSpinnerOptions[position].equals(getString(R.string.Favourites))) { // favourites
             mMovies.clear();
-            viewType = position;
+            mViewType = position;
             createImageLayout(FAVOURITES_LIST);
         }
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
@@ -254,7 +267,7 @@ public class MoviesMainActivity extends AppCompatActivity
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_choices, R.layout.spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setSelection(viewType);
+        spinner.setSelection(mViewType);
         spinner.setOnItemSelectedListener(this);
         logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         return true;
@@ -280,7 +293,14 @@ public class MoviesMainActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         if(outState!=null){
-            outState.putInt(DATABASE_REQUEST_TYPE,viewType);
+            outState.putInt(DATABASE_REQUEST_TYPE, mViewType);
+            if (mRecyclerView.getAdapter() != null && mRecyclerView.getAdapter().getItemCount() > 0) {
+                View v = mRecyclerView.getChildAt(0);
+                int top = (v == null) ? 0 : (v.getTop() - v.getPaddingTop());
+                int index = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                outState.putInt(DATABASE_POSITION_TOP, top);
+                outState.putInt(DATABASE_POSITION_INDEX, index);
+            }
         }
         super.onSaveInstanceState(outState);
     }
