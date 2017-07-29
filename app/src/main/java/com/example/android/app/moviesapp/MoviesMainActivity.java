@@ -179,7 +179,6 @@ public class MoviesMainActivity extends AppCompatActivity
                         m = NetworkConnection.fetchMainPageData(queryType, pageNum);
                         return m;
                     } catch (IOException e) {
-                        String a = e.getMessage();
                         logAndAppend(e.getMessage());
                         return null;
                     }
@@ -201,7 +200,6 @@ public class MoviesMainActivity extends AppCompatActivity
         if (null == data) {
             Generator.generateToastMessage(this, getResources().getString(R.string.io_exception_message));
         } else {
-            String s = getString(R.string.Favourites);
             if (mSpinnerOptions[mViewType].equals(getString(R.string.Favourites)) && data.size() == 0) {
                 Generator.generateToastMessage(this, getResources().getString(R.string.database_empty));
             }
