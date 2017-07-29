@@ -32,7 +32,8 @@ class NetworkConnection{
         if (response == null) {
             return null;
         }
-        return JSONProcessing.parseMovieDetails(response);
+        ArrayList<Movie> m = JSONProcessing.parseMovieDetails(response);
+        return m;
     }
 
     static ArrayList<String> fetchMovieTrailers(String movieId) throws IOException {

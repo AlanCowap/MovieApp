@@ -93,7 +93,7 @@ class JSONProcessing {
         }catch (JSONException e){
             return null;
         }
-        Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
+        // Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
         return movieThumbs;
     }
 

@@ -50,6 +50,7 @@ public class MoviesMainActivity extends AppCompatActivity
     // whether the view is currently by popular or rating
     // negative 1 indicates not currently set
     private static int mViewType = 0;
+    private static int mOldViewType = -1;
     // Untranslated options of the spinner comparison to identify which was selected
     private static String[] mSpinnerOptions;
     // The poster display area recyclerView
@@ -97,13 +98,6 @@ public class MoviesMainActivity extends AppCompatActivity
         if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Favourites))) {
             mMovies.clear();
             createImageLayout(FAVOURITES_LIST);
-        } else if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Rating))) {
-            mMovies.clear();
-            createImageLayout(RATING_LIST);
-        }
-        if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Popular))) {
-            mMovies.clear();
-            createImageLayout(POPULAR_LIST);
         }
     }
 
@@ -150,10 +144,13 @@ public class MoviesMainActivity extends AppCompatActivity
                 if(args == null){
                     return;
                 }
+
+                String choice = args.getString(DATABASE_REQUEST_TYPE);
                 //Initialising a loading indicator here if wanted
-                if(MoviesMainActivity.mMovies!=null && MoviesMainActivity.mMovies.size() > 0){
+                if (mOldViewType == mViewType && !mSpinnerOptions[mViewType].equals(getString(R.string.Favourites))) {
                     deliverResult(MoviesMainActivity.mMovies);
                 }else{
+                    mOldViewType = mViewType;
                     forceLoad();
                 }
             }
@@ -171,21 +168,22 @@ public class MoviesMainActivity extends AppCompatActivity
                     try {
                         return DataBaseConnection.fetchPersistentFavourites(getContext());
                     } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
+                        logAndAppend(e.getMessage());
                         return null;
                     }
 
                 } else {
                      /* Parse the URL from the passed in String and perform the search */
+                    ArrayList<Movie> m = null;
                     try {
-                        // HERE 0 parameter indicates it is a brand new query, and therefore not requesting a specific page
-                        return NetworkConnection.fetchMainPageData(queryType, pageNum);
+                        m = NetworkConnection.fetchMainPageData(queryType, pageNum);
+                        return m;
                     } catch (IOException e) {
-                        Log.e(TAG, e.getMessage());
+                        String a = e.getMessage();
+                        logAndAppend(e.getMessage());
                         return null;
                     }
                 }
-
             }
         };
     }
@@ -200,32 +198,37 @@ public class MoviesMainActivity extends AppCompatActivity
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         //Here hide the loading image if implemented
         //assume error if null results
-        if(null == data){
+        if (null == data) {
             Generator.generateToastMessage(this, getResources().getString(R.string.io_exception_message));
-        }else{
-            if (data.size() == 0) {
+        } else {
+            String s = getString(R.string.Favourites);
+            if (mSpinnerOptions[mViewType].equals(getString(R.string.Favourites)) && data.size() == 0) {
                 Generator.generateToastMessage(this, getResources().getString(R.string.database_empty));
             }
-            mMovies = data;
-            RecyclerView.LayoutManager layoutManager;
-            Display display = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            if(size.x>size.y){
-                layoutManager = new GridLayoutManager(getApplicationContext(), LANDSCAPE_WIDE_COUNT);
-            }else{
-                layoutManager = new GridLayoutManager(getApplicationContext(), PORTRAIT_WIDE_COUNT);
-            }
-            mRecyclerView.setLayoutManager(layoutManager);
-            ImageAdapter mImageAdapter = new ImageAdapter(data, this);
-            mRecyclerView.setAdapter(mImageAdapter);
-            if (mMovies.size() > 0 && mRecyclerViewIndexAtSave > 0) {
-                ((GridLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(mRecyclerViewIndexAtSave, mRecyclerViewTopPositionAtSave);
-            }
         }
-        logAndAppend(  Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
+        GenerateRecyclerView(data);
+        logAndAppend(Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
     /// END OF ASYNC LOADER OVERRIDES
+
+    private void GenerateRecyclerView(ArrayList<Movie> movies) {
+        mMovies = movies;
+        RecyclerView.LayoutManager layoutManager;
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        if (size.x > size.y) {
+            layoutManager = new GridLayoutManager(getApplicationContext(), LANDSCAPE_WIDE_COUNT);
+        } else {
+            layoutManager = new GridLayoutManager(getApplicationContext(), PORTRAIT_WIDE_COUNT);
+        }
+        mRecyclerView.setLayoutManager(layoutManager);
+        ImageAdapter mImageAdapter = new ImageAdapter(movies, this);
+        mRecyclerView.setAdapter(mImageAdapter);
+        if (mMovies.size() > 0 && mRecyclerViewIndexAtSave > 0) {
+            ((GridLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(mRecyclerViewIndexAtSave, mRecyclerViewTopPositionAtSave);
+        }
+    }
 
     //Spinner Click Listener events
     @Override
@@ -236,20 +239,17 @@ public class MoviesMainActivity extends AppCompatActivity
             Generator.mShowToast = true;
             return;
         }
-
+        mViewType = position;
+        if (mOldViewType != mViewType || mSpinnerOptions[mViewType].equals(getString(R.string.Favourites))) {
+            mMovies.clear();
+        }
         // process the clicked item
         if(mSpinnerOptions[position].equals(getString(R.string.Popular))){ // Popular
-            mMovies.clear();
-            mViewType = position;
             createImageLayout(POPULAR_LIST);
         }
         else if(mSpinnerOptions[position].equals(getString(R.string.Rating))){ // ratings
-            mMovies.clear();
-            mViewType = position;
             createImageLayout(RATING_LIST);
         } else if (mSpinnerOptions[position].equals(getString(R.string.Favourites))) { // favourites
-            mMovies.clear();
-            mViewType = position;
             createImageLayout(FAVOURITES_LIST);
         }
         logAndAppend( Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
