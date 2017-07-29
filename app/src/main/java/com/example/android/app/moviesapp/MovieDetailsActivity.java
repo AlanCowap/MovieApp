@@ -7,11 +7,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +27,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     // Debug tag name of class
     private static final String TAG = MoviesMainActivity.class.getSimpleName();
 
+    private static final String SCROLL_TOP = "scroll_top";
+    private static final String SCROLL_Y = "scroll_y";
+    private static final String SCROLL_X = "scroll_x";
     private static final String TRAILER_LINK_TITLE = "TrailerLink";
     private static final String TRAILER_REVIEWS = "Reviews";
     private static final String EMPTY_STRING = "";
@@ -43,15 +48,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private int movieID = 0;
     private int index = 0;
     private RecyclerView mVideoRecyclerView;
+    private NestedScrollView mNestedScrollView;
+    private int mNestedScrollViewPositionY;
+    private int mNestedScrollViewPositionX;
+    private int mNestedScrollViewPositionTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         logAndAppend( Generator.LOG_ENTERING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
         super.onCreate(savedInstanceState);
-        Intent triggeringIntent = getIntent();
-        if (triggeringIntent != null && triggeringIntent.hasExtra(Intent.EXTRA_TEXT)) {
-            movieID = Integer.parseInt(triggeringIntent.getStringExtra(Intent.EXTRA_TEXT));
-        }
         String tmpReviews = null;
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(TRAILER_LINK_TITLE)) {
@@ -61,9 +66,28 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 tmpReviews = savedInstanceState.getString(TRAILER_REVIEWS);
             }
         }
+        Intent triggeringIntent = getIntent();
+        if (triggeringIntent != null && triggeringIntent.hasExtra(Intent.EXTRA_TEXT)) {
+            movieID = Integer.parseInt(triggeringIntent.getStringExtra(Intent.EXTRA_TEXT));
+            mNestedScrollViewPositionX = 0;
+            mNestedScrollViewPositionY = 0;
+            mNestedScrollViewPositionTop = 0;
+        }
+
         setContentView(R.layout.activity_movie_details);
 
         mVideoRecyclerView = (RecyclerView) findViewById(R.id.rv_details_trailers);
+        mNestedScrollView = (NestedScrollView) findViewById(R.id.sv_detail);
+        mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                mNestedScrollViewPositionTop = mNestedScrollView.getTop();
+                int[] loc = new int[2];
+                mNestedScrollView.getLocationOnScreen(loc);
+                mNestedScrollViewPositionY = loc[1];
+                mNestedScrollViewPositionX = loc[0];
+            }
+        });
         for(int i = 0; i<MoviesMainActivity.mMovies.size(); ++i){
             if(MoviesMainActivity.mMovies.get(i).getId() == movieID){
                 index = i;
@@ -73,6 +97,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         if (mTrailerLink == null || mTrailerLink.length() == 0) {
             new GetVideos().execute();
+        }
+        if (MoviesMainActivity.mMovies.size() == 0) {
+            logAndAppend(Generator.LOG_EXITING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
+            return;
         }
         Movie movie = MoviesMainActivity.mMovies.get(index);
         mMovieThumbnail = (ImageView) findViewById(R.id.thumbnail);
@@ -95,10 +123,27 @@ public class MovieDetailsActivity extends AppCompatActivity {
             new GetReviews().execute();
         } else {
             mReviews.setText(tmpReviews);
+            mNestedScrollView.setScrollX(mNestedScrollViewPositionX);
+            mNestedScrollView.setScrollY(mNestedScrollViewPositionY);
         }
         mFavouriteButton = (Button) findViewById(R.id.btn_favourite);
         setSelectedItemAsFavourite(movieIsInDatabase());
         logAndAppend( Generator.LOG_EXITING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(TRAILER_LINK_TITLE)) {
+                mTrailerLink = savedInstanceState.getString(TRAILER_LINK_TITLE);
+            }
+            if (savedInstanceState.containsKey(SCROLL_Y)) {
+                mNestedScrollViewPositionY = savedInstanceState.getInt(SCROLL_Y);
+                mNestedScrollViewPositionTop = savedInstanceState.getInt(SCROLL_TOP);
+                mNestedScrollViewPositionX = savedInstanceState.getInt(SCROLL_X);
+            }
+        }
     }
 
     @Override
@@ -107,9 +152,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (outState != null) {
             outState.putString(TRAILER_LINK_TITLE, mTrailerLink);
             outState.putString(TRAILER_REVIEWS, mReviews.getText().toString());
+            if (mNestedScrollView != null && mNestedScrollViewPositionY > 0) {
+                outState.putInt(SCROLL_Y, mNestedScrollViewPositionY);
+                outState.putInt(SCROLL_X, mNestedScrollViewPositionX);
+                outState.putInt(SCROLL_TOP, mNestedScrollViewPositionTop);
+            }
         }
         super.onSaveInstanceState(outState);
     }
+
 
     public void favouriteButtonClicked(View view) {
 
@@ -253,6 +304,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 mReviews.setVisibility(View.INVISIBLE);
                 mReviewTitle.setVisibility(View.INVISIBLE);
             }
+            mNestedScrollView.setScrollX(mNestedScrollViewPositionX);
+            mNestedScrollView.setScrollY(mNestedScrollViewPositionY + mNestedScrollViewPositionTop);
         }
     }
 }

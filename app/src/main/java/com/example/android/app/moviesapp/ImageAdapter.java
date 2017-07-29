@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 /**
  * Adapted From:  https://www.learn2crack.com/2016/03/grid-recycler view-with-images-and-text.html
  *
@@ -20,11 +22,15 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
 
     private static final String TAG = ImageAdapter.class.getSimpleName();
     private static int viewHolderCount;
-
     // The Click Listener is passed from the parent as a parameter at construction
     final private ListItemClickListener mOnClickListener;
-    ImageAdapter(ListItemClickListener listener){
+    private ArrayList<Movie> mMovies = new ArrayList<>();
+
+    ImageAdapter(ArrayList<Movie> movies, ListItemClickListener listener) {
         super();
+        if (movies != null) {
+            mMovies = movies;
+        }
         Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         viewHolderCount = 0;
         mOnClickListener = listener;
@@ -52,9 +58,15 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
         Log.d(TAG, Generator.LOG_EXITING + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
+    public void clear() {
+        int size = this.mMovies.size();
+        this.mMovies.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
     @Override
     public int getItemCount() {
-        return MoviesMainActivity.mMovies.size();
+        return this.mMovies.size();
     }
 
     interface ListItemClickListener {
@@ -83,7 +95,7 @@ class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MovieViewHolder>{
         void bind(int listMovieIndex){
             Log.d(TAG, Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
             listItemIndex.setText(String.valueOf(listMovieIndex));
-            Movie m = MoviesMainActivity.mMovies.get(listMovieIndex);
+            Movie m = mMovies.get(listMovieIndex);
             movie_id.setText(String.valueOf(m.getId()));
             Picasso
                     .with(viewHolderIndex.getContext())

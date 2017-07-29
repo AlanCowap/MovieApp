@@ -97,6 +97,13 @@ public class MoviesMainActivity extends AppCompatActivity
         if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Favourites))) {
             mMovies.clear();
             createImageLayout(FAVOURITES_LIST);
+        } else if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Rating))) {
+            mMovies.clear();
+            createImageLayout(RATING_LIST);
+        }
+        if (mSpinnerOptions[MoviesMainActivity.mViewType].equals(getString(R.string.Popular))) {
+            mMovies.clear();
+            createImageLayout(POPULAR_LIST);
         }
     }
 
@@ -210,7 +217,7 @@ public class MoviesMainActivity extends AppCompatActivity
                 layoutManager = new GridLayoutManager(getApplicationContext(), PORTRAIT_WIDE_COUNT);
             }
             mRecyclerView.setLayoutManager(layoutManager);
-            ImageAdapter mImageAdapter = new ImageAdapter(this);
+            ImageAdapter mImageAdapter = new ImageAdapter(data, this);
             mRecyclerView.setAdapter(mImageAdapter);
             if (mMovies.size() > 0 && mRecyclerViewIndexAtSave > 0) {
                 ((GridLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(mRecyclerViewIndexAtSave, mRecyclerViewTopPositionAtSave);
