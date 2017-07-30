@@ -58,6 +58,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
         logAndAppend( Generator.LOG_ENTERING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
         super.onCreate(savedInstanceState);
         String tmpReviews = null;
+        Intent triggeringIntent = getIntent();
+        if (triggeringIntent != null && triggeringIntent.hasExtra(Intent.EXTRA_TEXT)) {
+            movieID = Integer.parseInt(triggeringIntent.getStringExtra(Intent.EXTRA_TEXT));
+            mNestedScrollViewPositionX = 0;
+            mNestedScrollViewPositionY = 0;
+            mNestedScrollViewPositionTop = 0;
+        }
+        setContentView(R.layout.activity_movie_details);
+        mVideoRecyclerView = (RecyclerView) findViewById(R.id.rv_details_trailers);
+        mNestedScrollView = (NestedScrollView) findViewById(R.id.sv_detail);
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(TRAILER_LINK_TITLE)) {
                 mTrailerLink = savedInstanceState.getString(TRAILER_LINK_TITLE);
@@ -66,28 +77,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 tmpReviews = savedInstanceState.getString(TRAILER_REVIEWS);
             }
         }
-        Intent triggeringIntent = getIntent();
-        if (triggeringIntent != null && triggeringIntent.hasExtra(Intent.EXTRA_TEXT)) {
-            movieID = Integer.parseInt(triggeringIntent.getStringExtra(Intent.EXTRA_TEXT));
-            mNestedScrollViewPositionX = 0;
-            mNestedScrollViewPositionY = 0;
-            mNestedScrollViewPositionTop = 0;
-        }
 
-        setContentView(R.layout.activity_movie_details);
 
-        mVideoRecyclerView = (RecyclerView) findViewById(R.id.rv_details_trailers);
-        mNestedScrollView = (NestedScrollView) findViewById(R.id.sv_detail);
-        mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            @Override
-            public void onScrollChanged() {
-                mNestedScrollViewPositionTop = mNestedScrollView.getTop();
-                int[] loc = new int[2];
-                mNestedScrollView.getLocationOnScreen(loc);
-                mNestedScrollViewPositionY = loc[1];
-                mNestedScrollViewPositionX = loc[0];
-            }
-        });
         for(int i = 0; i<MoviesMainActivity.mMovies.size(); ++i){
             if(MoviesMainActivity.mMovies.get(i).getId() == movieID){
                 index = i;
@@ -128,7 +119,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
         mFavouriteButton = (Button) findViewById(R.id.btn_favourite);
         setSelectedItemAsFavourite(movieIsInDatabase());
+        addScrollListener();
         logAndAppend( Generator.LOG_EXITING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
+    }
+
+    private void addScrollListener() {
+        mNestedScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                mNestedScrollViewPositionTop = mNestedScrollView.getTop();
+                int[] loc = new int[2];
+                mNestedScrollView.getLocationOnScreen(loc);
+                mNestedScrollViewPositionY = loc[1];
+                mNestedScrollViewPositionX = loc[0];
+            }
+        });
     }
 
     @Override
