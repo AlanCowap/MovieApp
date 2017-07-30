@@ -52,6 +52,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private int mNestedScrollViewPositionY;
     private int mNestedScrollViewPositionX;
     private int mNestedScrollViewPositionTop;
+    private Boolean mIsWaitingForMovies = false;
+    private Boolean mIsWaitingForReviews = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +88,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         }
 
-        if (mTrailerLink == null || mTrailerLink.length() == 0) {
-            new GetVideos().execute();
-        }
         if (MoviesMainActivity.mMovies.size() == 0) {
             logAndAppend(Generator.LOG_EXITING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
             return;
@@ -110,16 +109,23 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mOverview.setText(movie.getOverview());
         mReviews = (TextView) findViewById(R.id.reviews);
         mReviewTitle = (TextView) findViewById(R.id.reviews_title);
+        if (mTrailerLink == null || mTrailerLink.length() == 0) {
+            mIsWaitingForMovies = true;
+            new GetVideos().execute();
+        }
         if (tmpReviews == null || tmpReviews.length() == 0) {
+            mIsWaitingForReviews = true;
             new GetReviews().execute();
         } else {
             mReviews.setText(tmpReviews);
             mNestedScrollView.setScrollX(mNestedScrollViewPositionX);
             mNestedScrollView.setScrollY(mNestedScrollViewPositionY);
+            if (!mIsWaitingForMovies) {
+                addScrollListener();
+            }
         }
         mFavouriteButton = (Button) findViewById(R.id.btn_favourite);
         setSelectedItemAsFavourite(movieIsInDatabase());
-        addScrollListener();
         logAndAppend( Generator.LOG_EXITING + Generator.SPACE_CHAR + Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 
@@ -266,6 +272,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 mVideoRecyclerView.setVisibility(View.INVISIBLE);
                 mTrailerLink = EMPTY_STRING;
             }
+            mIsWaitingForMovies = false;
+            if (!mIsWaitingForReviews) {
+                addScrollListener();
+            }
         }
 
         @Override
@@ -311,6 +321,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
             mNestedScrollView.setScrollX(mNestedScrollViewPositionX);
             mNestedScrollView.setScrollY(mNestedScrollViewPositionY + mNestedScrollViewPositionTop);
+            mIsWaitingForReviews = false;
+            if (!mIsWaitingForMovies) {
+                addScrollListener();
+            }
         }
     }
 }
