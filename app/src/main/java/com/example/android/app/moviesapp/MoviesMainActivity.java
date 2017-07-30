@@ -1,7 +1,10 @@
 package com.example.android.app.moviesapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -177,11 +180,15 @@ public class MoviesMainActivity extends AppCompatActivity
                 } else {
                      /* Parse the URL from the passed in String and perform the search */
                     ArrayList<Movie> m = null;
-                    try {
-                        m = NetworkConnection.fetchMainPageData(queryType, pageNum);
-                        return m;
-                    } catch (IOException e) {
-                        logAndAppend(e.getMessage());
+                    if (isOnline()) {
+                        try {
+                            m = NetworkConnection.fetchMainPageData(queryType, pageNum);
+                            return m;
+                        } catch (IOException e) {
+                            logAndAppend(e.getMessage());
+                            return null;
+                        }
+                    } else {
                         return null;
                     }
                 }
@@ -198,7 +205,6 @@ public class MoviesMainActivity extends AppCompatActivity
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> data) {
         logAndAppend(Generator.LOG_ENTERING + Thread.currentThread().getStackTrace()[2].getMethodName());
         //Here hide the loading image if implemented
-        //assume error if null results
         if (null == data) {
             Generator.generateToastMessage(this, getResources().getString(R.string.io_exception_message));
         } else {
@@ -240,7 +246,7 @@ public class MoviesMainActivity extends AppCompatActivity
             return;
         }
         mViewType = position;
-        if (mOldViewType != mViewType || mSpinnerOptions[mViewType].equals(getString(R.string.Favourites))) {
+        if (mMovies != null && (mOldViewType != mViewType || mSpinnerOptions[mViewType].equals(getString(R.string.Favourites)))) {
             mMovies.clear();
         }
         // process the clicked item
@@ -310,6 +316,13 @@ public class MoviesMainActivity extends AppCompatActivity
             }
         }
         super.onSaveInstanceState(outState);
+    }
+
+    //https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     // logging output
