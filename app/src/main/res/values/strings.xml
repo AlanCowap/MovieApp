@@ -23,7 +23,7 @@
     <string name="space_character" translatable="false">" "</string>
     <string name="Popular" translatable="false">Popular</string>
     <string name="Rating" translatable="false">Rating</string>
-    <string name="Favourites" translatable="false">Favourites</string>
+    <string name="Favourites" translatable="false">favourites</string>
     <string name="reviews" translatable="true">Reviews</string>
     <string name="day_iso_format" translatable="false">"yyyy-MM-dd'T'HH:mm'Z'"</string>
     <string name="like_icon" translatable="false">&#9733;</string>
