@@ -148,8 +148,10 @@ public class MoviesMainActivity extends AppCompatActivity
                 String choice = args.getString(DATABASE_REQUEST_TYPE);
                 //Initialising a loading indicator here if wanted
                 if (mOldViewType == mViewType && !mSpinnerOptions[mViewType].equals(getString(R.string.Favourites))) {
+                    mOldViewType = mViewType;
                     deliverResult(MoviesMainActivity.mMovies);
                 }else{
+                    mRecyclerView.setAdapter(null);
                     mOldViewType = mViewType;
                     forceLoad();
                 }
@@ -223,7 +225,7 @@ public class MoviesMainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(layoutManager);
         ImageAdapter mImageAdapter = new ImageAdapter(movies, this);
         mRecyclerView.setAdapter(mImageAdapter);
-        if (mMovies.size() > 0 && mRecyclerViewIndexAtSave > 0) {
+        if (mMovies != null && mMovies.size() > 0 && mRecyclerViewIndexAtSave > 0) {
             ((GridLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(mRecyclerViewIndexAtSave, mRecyclerViewTopPositionAtSave);
         }
     }
