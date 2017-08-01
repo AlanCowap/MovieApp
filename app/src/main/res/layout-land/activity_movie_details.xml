@@ -37,6 +37,7 @@
             android:padding="@dimen/tiny_padding" />
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/sv_detail"
             android:layout_width="@dimen/no_padding"
             android:layout_height="match_parent"
             android:layout_weight="@integer/paired">
