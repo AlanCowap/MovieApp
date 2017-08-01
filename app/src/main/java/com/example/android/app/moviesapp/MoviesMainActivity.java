@@ -63,6 +63,7 @@ public class MoviesMainActivity extends AppCompatActivity
     private int mRecyclerViewIndexAtSave = 0;
 
     //TODO DONE REQUIREMENT "Maintains list items positions on device rotation" - the Grid Layout loses it's position e.g. on device rotation
+    //TODO-2.1 Excellent All Requirements met.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
